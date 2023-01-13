@@ -33,3 +33,17 @@ const storage = multer.diskStorage({
     }
 });
 const uplaod = multer({ storage});
+
+/* Mongoose Setup */
+const PORT = process.env.PORT || 6001;
+/* To avoid any warning*/
+mongoose.set('strictQuery', false);
+/* To connect to the database */
+mongoose.connect(process.env.MONGO_URL, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+})
+.then(() => {
+    app.listen(PORT, () => console.log(`Server running on port: ${PORT}`));
+})
+.catch((error) => console.log(error.message));
