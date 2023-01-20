@@ -39,7 +39,7 @@ build/Release
 
 # Dependency directories
 node_modules/
-package-lock.json
+
 
 # TypeScript v1 declaration files
 typings/
@@ -101,5 +101,9 @@ dist
 
 # TernJS port file
 .tern-port
-/.idea/back.iml
-/.idea/modules.xml
+
+/.idea
+
+/.idea/workspace.xml
+/.idea/vcs.xml
+/.idea/jsLibraryMappings.xml
