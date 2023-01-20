@@ -8,7 +8,8 @@ import helmet from "helmet";
 import morgan from "morgan";
 import path from "path";
 import { fileURLToPath} from "url";
-
+import { register } from "./controllers/auth.js";
+/*Test*/
 /* Configuration */
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -34,6 +35,8 @@ const storage = multer.diskStorage({
 });
 const uplaod = multer({ storage});
 
+/* Routes with files */
+app.post("/auth/register", uplaod.single("picture"), register);
 /* Mongoose Setup */
 const PORT = process.env.PORT || 6001;
 /* To avoid any warning*/
