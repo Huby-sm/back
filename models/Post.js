@@ -14,10 +14,10 @@ const postSchema = mongoose.Schema(
             type: String,
             required: true,
         },
-        filiere: String,
-        promo: Number,
-        picturePath: String,
+        location: String,
         description: String,
+        picturePath: String,
+        userPicturePath: String,
         likes: {
             type: Map,
             of: Boolean,
@@ -25,7 +25,7 @@ const postSchema = mongoose.Schema(
         comments: {
             type: Array,
             default: [],
-        }
+        },
     },
     { timestamps: true }
 );
