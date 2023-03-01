@@ -41,5 +41,6 @@ const UserSchema = new mongoose.Schema(
     { timestamps: true }
 );
 
-const User = mongoose.model("User", UserSchema);
+const User = mongoose.model("User", UserSchema); //"nom de la collection", classe
 export default User;
+//User au singulier qui correspond au nom de la collection
