@@ -11,4 +11,5 @@ router.post("/", verifyToken, createComment);
 /* UPDATE */
 router.get("/:postId", verifyToken, getCommentInPost);
 
+/*TEST*/
 export default router;
