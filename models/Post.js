@@ -22,10 +22,6 @@ const postSchema = mongoose.Schema(
             type: Map,
             of: Boolean,
         },
-        comments: {
-            type: Array,
-            default: [],
-        },
     },
     { timestamps: true }
 );
@@ -33,3 +29,9 @@ const postSchema = mongoose.Schema(
 const Post = mongoose.model("Post", postSchema);
 
 export default Post;
+
+/*         comments: {
+            type: String,
+            default: [
+            ],
+        }, */
