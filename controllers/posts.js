@@ -2,6 +2,8 @@ import Post from "../models/Post.js";
 import User from "../models/User.js";
 
     /* CREATE */
+//retour un seul post //
+
     export const createPost = async (req, res) => {
         try {
             const { userId, description, picturePath } = req.body;
@@ -20,6 +22,8 @@ import User from "../models/User.js";
             await newPost.save();
 
             const post = await Post.find();
+            //** Tri des données dans l'ordre décroissant selon la date de création du post
+            post.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
             res.status(201).json(post);
         } catch (err) {
             res.status(409).json({ message: err.message });
@@ -30,6 +34,8 @@ import User from "../models/User.js";
     export const getFeedPosts = async (req, res) => {
         try {
             const post = await Post.find();
+            //** Tri des données dans l'ordre décroissant selon la date de création du post
+            post.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
             res.status(200).json(post);
         } catch (err) {
             res.status(404).json({ message: err.message });
@@ -41,6 +47,19 @@ import User from "../models/User.js";
             const { userId } = req.params;
             const post = await Post.find({ userId });
             res.status(200).json(post);
+        } catch (err) {
+            res.status(404).json({ message: err.message });
+        }
+    };
+
+    //si je veux afficher les user qui post un commentaire
+    export const getPost = async (req, res) => {
+        try {
+            const { postId } = req.params;
+            const post = await Post.findOne(postId);
+            const comments = await Comment.find({ post: post._id }).populate("user");
+
+            res.status(200).json(comments);
         } catch (err) {
             res.status(404).json({ message: err.message });
         }
@@ -71,7 +90,9 @@ import User from "../models/User.js";
             res.status(404).json({message: err.message});
         }
     };
-    /* COMMENTAIRE  */
+
+
+    /* COMMENTAIRE  ????*/
     export const getCommentByUserInPost = async (req, res) => {
         try {
             const { id } = req.params; // l'ID du post

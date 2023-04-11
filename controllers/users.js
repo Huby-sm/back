@@ -11,6 +11,15 @@ export const getUser = async (req, res) => {
     }
 };
 
+export const getUsers = async (req, res) => {
+    try {
+        const users = await User.find();
+        res.status(200).json(users);
+    } catch (err) {
+        res.status(404).json({ message: err.message });
+    }
+};
+
 export const getUserFriends = async (req, res) => {
     try {
         const { id } = req.params;
@@ -38,6 +47,7 @@ export const addRemoveFriend = async (req, res) => {
         const friend = await User.findById(friendId);
 
         if (user.friends.includes(friendId)) {
+            //supp les elements du tbl correspondent à friendId
             user.friends = user.friends.filter((id) => id !== friendId);
             friend.friends = friend.friends.filter((id) => id !== id);
         } else {
