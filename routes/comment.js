@@ -5,10 +5,10 @@ import {createComment,getCommentInPost} from "../controllers/comments.js";
 
 const router = express.Router();
 
-/* READ */
+/* CREATE */
 router.post("/", verifyToken, createComment);
 
-/* UPDATE */
+/* READ */
 router.get("/:postId", verifyToken, getCommentInPost);
 
 /*TEST*/
