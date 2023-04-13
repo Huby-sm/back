@@ -1,9 +1,11 @@
 import mongoose from "mongoose";
+import {Schema} from "mongoose";
 
-const postSchema = mongoose.Schema(
+const postSchema = new mongoose.Schema(
     {
         userId: {
-            type: String,
+            type: Schema.Types.ObjectId,
+            ref: "User",
             required: true,
         },
         firstName: {
