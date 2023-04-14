@@ -1,0 +1,22 @@
+name: Build Docker Image
+
+on:
+  push:
+    branches:
+      - develop # On build l'image Docker à chaque push sur la branche develop
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Build Docker Image
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          push: true
+          tags: huby-sm/back:dev
