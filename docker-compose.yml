@@ -1,0 +1,14 @@
+version: "3"
+services:
+  back:
+    image: ghcr.io/huby-sm/back:dev
+    ports:
+      - "3001:3001"
+    env_file:
+      - .env
+  front:
+    image: ghcr.io/huby-sm/front:dev
+    ports:
+      - "3000:80"
+    env_file:
+      - .env
