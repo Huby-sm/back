@@ -21,4 +21,4 @@ jobs:
           push: true
           tags: ghcr.io/huby-sm/back:dev # On push l'image sur le registry GitHub
           username: ${{ github.actor }} # On récupère les secrets du repository
-          password: {{ secrets.GHCR_TOKEN }}
+          password: {{ secrets.TOKEN }}
