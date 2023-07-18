@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 import User from "../models/User.js";
 import UserToken from "../models/UserToken.js";
 import sendEmail from "../utils/mailer.js";
+import { generateToken } from "../utils/index.js";
 import nodemailer from "nodemailer";
 
 /* REGISTER USER */
@@ -63,12 +64,9 @@ export const sendResetPasswordEmail = async (req, res) => {
   const user = await User.findOne({ email: email });
   if (!user) return res.status(400).json({ msg: "User does not exist. " });
 
-  const salt = await bcrypt.genSalt();
-  const hash = await bcrypt.hash(email, salt);
-
   const token = new UserToken({
     userId: user._id,
-    token: hash,
+    token: generateToken(32),
     context: "resetPassword",
   });
 
