@@ -90,3 +90,23 @@ export const sendResetPasswordEmail = async (req, res) => {
   console.log("link :>> ", link);
   res.status(200).json({ status: "ok" });
 };
+
+export const resetPasswordEmail = async (req, res) => {
+  const { token, password } = req.body;
+  const tokenDB = await UserToken.findOne({ token });
+
+  if (!tokenDB) return res.status(400).json({ msg: "Token does not exist. " });
+
+  const user = await User.findOne({ _id: tokenDB.userId });
+  if (!user) return res.status(400).json({ msg: "User does not exist. " });
+
+  const salt = await bcrypt.genSalt();
+  const passwordHash = await bcrypt.hash(password, salt);
+
+  user.password = passwordHash;
+  await user.save();
+
+  await UserToken.deleteOne({ token });
+
+  res.status(200).json({ status: "ok" });
+};
