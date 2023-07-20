@@ -23,3 +23,14 @@ export const listNotifications = async (req, res) => {
     res.status(404).json({ message: err.message });
   }
 };
+
+export const countNotSeenNotifications = async (req, res) => {
+  try {
+    const { userId } = req.body;
+    const notifications = await Notification.find({ userId, seen: false });
+
+    res.status(200).json({ count: notifications.length });
+  } catch (err) {
+    res.status(404).json({ message: err.message });
+  }
+};
