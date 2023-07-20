@@ -49,3 +49,20 @@ export const markSeen = async (req, res) => {
     res.status(404).json({ message: err.message });
   }
 };
+
+export const update = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { data } = req.body;
+
+    const notification = await Notification.findOneAndUpdate(
+      { _id: id },
+      { seen: true, data },
+      { new: true }
+    );
+
+    res.status(200).json(notification);
+  } catch (err) {
+    res.status(404).json({ message: err.message });
+  }
+};
