@@ -20,7 +20,7 @@ import { verifyToken } from "./middleware/auth.js";
 import User from "./models/User.js";
 import Post from "./models/Post.js";
 import { users, posts } from "./data/index.js";
-
+import setupSocketIO from "./socketio/setup.js";
 import fastTest from "./fastTest.js";
 
 /* CONFIGURATIONS */
@@ -73,7 +73,7 @@ mongoose
     useUnifiedTopology: true,
   })
   .then(() => {
-    app.listen(PORT, () => console.log(`Server Port: ${PORT}`));
+    setupSocketIO(app, PORT);
 
     fastTest();
     /* ADD DATA ONE TIME */

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Socket.io Client</title>
+  </head>
+  <body>
+    <h1>Socket.io Client</h1>
+    <textarea id="messages" rows="10" cols="40" readonly></textarea><br />
+    <input type="text" id="messageInput" placeholder="Type your message" />
+    <button onclick="sendMessage()">Send</button>
+
+    <script
+      src="https://cdn.socket.io/4.6.0/socket.io.min.js"
+      integrity="sha384-c79GN5VsunZvi+Q/WObgk2in0CbZsHnjEqvFxC5DxHn9lTfNce2WW6h2pH6u/kF+"
+      crossorigin="anonymous"
+    ></script>
+    <script>
+      // Replace 'http://localhost:3000' with the URL of your Socket.io server
+      const socket = io("http://localhost:3001");
+
+      // Get references to the HTML elements
+      const messagesTextarea = document.getElementById("messages");
+      const messageInput = document.getElementById("messageInput");
+
+      // Function to display a message in the textarea
+      function displayMessage(message) {
+        messagesTextarea.value += message + "\n";
+      }
+
+      // Function to send a message to the server
+      function sendMessage() {
+        const message = messageInput.value;
+        socket.emit("message", message);
+        displayMessage("You: " + message);
+        messageInput.value = "";
+      }
+
+      // Event listener to handle incoming messages from the server
+      socket.on("notification", (message) => {
+        displayMessage("Server: " + message);
+      });
+    </script>
+  </body>
+</html>
