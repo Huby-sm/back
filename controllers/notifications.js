@@ -1,4 +1,3 @@
-import User from "../models/User.js";
 import Notification from "../models/Notification.js";
 
 export const createNotification = async (req, res) => {
