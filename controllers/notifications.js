@@ -34,3 +34,18 @@ export const countNotSeenNotifications = async (req, res) => {
     res.status(404).json({ message: err.message });
   }
 };
+
+export const markSeen = async (req, res) => {
+  try {
+    const { userId } = req.body;
+
+    const update = await Notification.updateMany(
+      { userId, seen: false },
+      { $set: { seen: true } }
+    );
+
+    res.status(200).json({ status: "ok", update });
+  } catch (err) {
+    res.status(404).json({ message: err.message });
+  }
+};
