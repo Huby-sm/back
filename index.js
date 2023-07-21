@@ -21,6 +21,7 @@ import User from "./models/User.js";
 import Post from "./models/Post.js";
 import { users, posts } from "./data/index.js";
 import setupSocketIO from "./socketio/setup.js";
+import { cleanSocketIds } from "./socketio/setup.js";
 import fastTest from "./fastTest.js";
 
 /* CONFIGURATIONS */
@@ -72,7 +73,8 @@ mongoose
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
-  .then(() => {
+  .then(async () => {
+    await cleanSocketIds();
     setupSocketIO(app, PORT);
 
     fastTest();

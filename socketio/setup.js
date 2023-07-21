@@ -1,6 +1,13 @@
 import { createServer } from "http";
 import { Server } from "socket.io";
 
+import User from "../models/User.js";
+
+export const cleanSocketIds = async () => {
+  await User.updateMany({}, { $set: { socketIds: [] } });
+  console.log("ici");
+};
+
 const setupSocketIO = async (app, PORT) => {
   const httpServer = createServer(app);
   // app.listen(PORT, () => console.log(`Server Port: ${PORT}`));
