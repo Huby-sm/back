@@ -25,8 +25,8 @@ export const listNotifications = async (req, res) => {
 
 export const countNotSeenNotifications = async (req, res) => {
   try {
-    const { userId } = req.body;
-    const notifications = await Notification.find({ userId, seen: false });
+    const { id } = req.user;
+    const notifications = await Notification.find({ userId: id, seen: false });
 
     res.status(200).json({ count: notifications.length });
   } catch (err) {
@@ -36,15 +36,17 @@ export const countNotSeenNotifications = async (req, res) => {
 
 export const markSeen = async (req, res) => {
   try {
-    const { userId } = req.body;
+    const { id } = req.user;
 
+    console.log("avant1");
     const update = await Notification.updateMany(
-      { userId, seen: false },
+      { userId: id, seen: false },
       { $set: { seen: true } }
     );
-
+    console.log("avant");
     res.status(200).json({ status: "ok", update });
   } catch (err) {
+    console.log("après");
     res.status(404).json({ message: err.message });
   }
 };
