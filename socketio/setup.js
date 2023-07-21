@@ -10,10 +10,12 @@ export const cleanSocketIds = async () => {
   console.log("ici");
 };
 
+export let io = null;
+
 const setupSocketIO = async (app, PORT) => {
   const httpServer = createServer(app);
   // app.listen(PORT, () => console.log(`Server Port: ${PORT}`));
-  const io = new Server(httpServer, {
+  io = new Server(httpServer, {
     /* options */
     cors: {
       origin: "*",
