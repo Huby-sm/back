@@ -12,10 +12,9 @@ export const verifyToken = async (req, res, next) => {
       token = token.slice(7, token.length).trimLeft();
     }
 
-    console.log("token :>> ", token);
     const verified = jwt.verify(token, process.env.JWT_SECRET);
-    console.log("verified :>> ", verified);
     req.user = verified;
+
     next();
   } catch (err) {
     res.status(500).json({ error: err.message });

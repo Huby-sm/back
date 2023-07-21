@@ -12,8 +12,8 @@ export const createNotification = async (req, res) => {
 };
 export const listNotifications = async (req, res) => {
   try {
-    const { userId } = req.body;
-    const notifications = await Notification.find({ userId })
+    const { id } = req.user;
+    const notifications = await Notification.find({ userId: id })
       .sort({ createdAt: "desc" })
       .exec();
 
