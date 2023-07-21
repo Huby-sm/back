@@ -7,7 +7,6 @@ import { removeAllInstances } from "../utils/index.js";
 
 export const cleanSocketIds = async () => {
   await User.updateMany({}, { $set: { socketIds: [] } });
-  console.log("ici");
 };
 
 export let io = null;
