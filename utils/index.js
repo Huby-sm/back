@@ -9,3 +9,9 @@ export function generateToken(length) {
   }
   return b.join("");
 }
+
+export function removeAllInstances(arr, item) {
+  for (var i = arr.length; i--; ) {
+    if (arr[i] === item) arr.splice(i, 1);
+  }
+}

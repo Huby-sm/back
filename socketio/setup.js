@@ -1,7 +1,9 @@
 import { createServer } from "http";
 import { Server } from "socket.io";
+import jwt from "jsonwebtoken";
 
 import User from "../models/User.js";
+import { removeAllInstances } from "../utils/index.js";
 
 export const cleanSocketIds = async () => {
   await User.updateMany({}, { $set: { socketIds: [] } });
@@ -19,27 +21,20 @@ const setupSocketIO = async (app, PORT) => {
     },
   });
 
-  io.on("connection", (socket) => {
-    // const userId = socket?.handshake?.query?.userId;
-    // console.log("connected", socket.handshake.query.userId);
-    console.log("connected :>> ", socket.id);
-    // socket.to(userId).emit("user joined", "isis");
-    // socket.emit("1234", { data: "ici" });
-    // socket.on("message", (toto) => {
-    //   console.log("toto :>> ", toto);
-    // });
-    // console.log(
-    //   "io.sockets.connected[socket.id] :>> ",
-    //   io.sockets.sockets.get(socket.id)
-    // );
-    console.log(
-      "io.sockets.connected[socket.id] :>> ",
-      io.sockets.sockets["toto"]
+  io.on("connection", async (socket) => {
+    const { id } = jwt.verify(
+      socket.handshake.query.token,
+      process.env.JWT_SECRET
     );
 
-    io.sockets.sockets.get(socket.id).emit("notification", "PAR ICI MA GUEULE");
-    socket.once("disconnect", () => {
-      console.log("loool", socket.id);
+    const user = await User.findOne({ _id: id });
+    user.socketIds.push(socket.id);
+    await user.save();
+
+    socket.once("disconnect", async () => {
+      const user = await User.findOne({ _id: id });
+      removeAllInstances(user.socketIds, socket.id);
+      await user.save();
     });
   });
 

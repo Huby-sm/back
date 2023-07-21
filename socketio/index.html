@@ -15,8 +15,10 @@
       crossorigin="anonymous"
     ></script>
     <script>
+      const token =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0YjY2N2RhNDgzOTZiMTIyMTJmMTY1NCIsImlhdCI6MTY4OTk1MjQ3MH0.Yj_zNA8FVKdWVb1xGPyHV5Eyn9EeMayaD2VZTWX4FO0";
       // Replace 'http://localhost:3000' with the URL of your Socket.io server
-      const socket = io("http://localhost:3001");
+      const socket = io("http://localhost:3001", { query: { token } });
 
       // Get references to the HTML elements
       const messagesTextarea = document.getElementById("messages");
