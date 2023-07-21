@@ -31,6 +31,10 @@ const setupSocketIO = async (app, PORT) => {
     user.socketIds.push(socket.id);
     await user.save();
 
+    // io.sockets.sockets
+    //   .get(socket.id)
+    //   .emit("notification", { data: "PAR ICI MA GUEULE" });
+
     socket.once("disconnect", async () => {
       const user = await User.findOne({ _id: id });
       removeAllInstances(user.socketIds, socket.id);
