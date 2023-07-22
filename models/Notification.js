@@ -14,16 +14,19 @@ const NotificationSchema = new mongoose.Schema(
     },
     data: {
       type: Object,
-      required: true,
     },
     seen: {
       type: Boolean,
       required: true,
       default: false,
     },
+    friendId: {
+      type: Schema.Types.ObjectId,
+      ref: "Friend",
+    },
   },
   { timestamps: true }
 );
 
-const Notifcation = mongoose.model("Notifcation", NotificationSchema); //"nom de la collection", classe
-export default Notifcation;
+const Notification = mongoose.model("Notification", NotificationSchema); //"nom de la collection", classe
+export default Notification;

@@ -3,13 +3,35 @@ import { Server } from "socket.io";
 import jwt from "jsonwebtoken";
 
 import User from "../models/User.js";
+import Notification from "../models/Notification.js";
 import { removeAllInstances } from "../utils/index.js";
+
+export let io = null;
 
 export const cleanSocketIds = async () => {
   await User.updateMany({}, { $set: { socketIds: [] } });
 };
 
-export let io = null;
+export const emitNotification = async (userId, notificationId) => {
+  const user = await User.findOne({ _id: userId });
+  const notification = await Notification.findOne({ _id: notificationId })
+    .sort({ createdAt: "desc" })
+    .populate("friendId")
+    .populate({
+      path: "friendId",
+      populate: {
+        path: "user1Id user2Id",
+        model: "User",
+      },
+    })
+    .exec();
+
+  user.socketIds.forEach((socketId) =>
+    io.sockets.sockets
+      .get(socketId)
+      .emit("notification", JSON.stringify(notification))
+  );
+};
 
 const setupSocketIO = async (app, PORT) => {
   const httpServer = createServer(app);
