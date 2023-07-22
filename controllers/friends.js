@@ -7,9 +7,6 @@ export const createFriendRequest = async (req, res) => {
     const { id } = req.user;
     const { userId } = req.body;
 
-    console.log("id :>> ", id);
-    console.log("userId :>> ", userId);
-
     const friend = new Friend({
       user1Id: id,
       user2Id: userId,
@@ -28,6 +25,36 @@ export const createFriendRequest = async (req, res) => {
     await emitNotification(userId, notification);
 
     res.status(200).json(friend);
+  } catch (err) {
+    res.status(404).json({ message: err.message });
+  }
+};
+
+export const acceptFriendRequest = async (req, res) => {
+  try {
+    const { id } = req.user;
+    const { userId } = req.body;
+
+    const friend = await Friend.findOne({
+      user1Id: userId,
+      user2Id: id,
+    });
+    console.log("friend KLOOO:>> ", friend);
+    if (friend && friend.status === "request") {
+      friend.status = "friend";
+      await friend.save();
+
+      const notification = new Notification({
+        userId: id,
+        type: "friendRequest",
+        friendId: friend._id,
+      });
+      await notification.save();
+
+      await emitNotification(id, notification);
+
+      res.status(200).json(friend);
+    }
   } catch (err) {
     res.status(404).json({ message: err.message });
   }
