@@ -8,16 +8,18 @@ export const getUser = async (req, res) => {
     const { id } = req.params;
     const user = await User.findById(id);
 
+    let friend = null;
+
     if (currentUserId !== id) {
-      const friend = await Friend.findOne({
+      friend = await Friend.findOne({
         $or: [
           { user1Id: id, user2Id: currentUserId },
           { user1Id: currentUserId, user2Id: id },
         ],
       });
-      return res.status(200).json({ user, friend });
     }
-    res.status(200).json(user);
+
+    res.status(200).json({ user, friend: null });
   } catch (err) {
     res.status(404).json({ message: err.message });
   }
