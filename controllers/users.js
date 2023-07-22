@@ -19,7 +19,7 @@ export const getUser = async (req, res) => {
       });
     }
 
-    res.status(200).json({ user, friend: null });
+    res.status(200).json({ user, friend });
   } catch (err) {
     res.status(404).json({ message: err.message });
   }

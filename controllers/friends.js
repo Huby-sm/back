@@ -7,6 +7,9 @@ export const createFriendRequest = async (req, res) => {
     const { id } = req.user;
     const { userId } = req.body;
 
+    console.log("id :>> ", id);
+    console.log("userId :>> ", userId);
+
     const friend = new Friend({
       user1Id: id,
       user2Id: userId,
@@ -24,7 +27,7 @@ export const createFriendRequest = async (req, res) => {
 
     await emitNotification(userId, notification);
 
-    res.status(200).json({ status: "ok" });
+    res.status(200).json(friend);
   } catch (err) {
     res.status(404).json({ message: err.message });
   }
