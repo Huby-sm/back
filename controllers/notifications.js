@@ -15,6 +15,14 @@ export const listNotifications = async (req, res) => {
     const { id } = req.user;
     const notifications = await Notification.find({ userId: id })
       .sort({ createdAt: "desc" })
+      .populate("friendId")
+      .populate({
+        path: "friendId",
+        populate: {
+          path: "user1Id user2Id",
+          model: "User",
+        },
+      })
       .exec();
 
     res.status(200).json(notifications);

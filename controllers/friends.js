@@ -18,7 +18,7 @@ export const createFriendRequest = async (req, res) => {
     const notification = new Notification({
       userId,
       type: "friendRequest",
-      friendId: friend._id,
+      friendId: friend,
     });
     await notification.save();
 
@@ -45,13 +45,13 @@ export const acceptFriendRequest = async (req, res) => {
       await friend.save();
 
       const notification = new Notification({
-        userId: id,
+        userId,
         type: "friendRequest",
-        friendId: friend._id,
+        friendId: friend,
       });
       await notification.save();
 
-      await emitNotification(id, notification);
+      await emitNotification(userId, notification);
 
       res.status(200).json(friend);
     }
