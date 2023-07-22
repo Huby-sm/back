@@ -38,9 +38,10 @@ export const acceptFriendRequest = async (req, res) => {
     const friend = await Friend.findOne({
       user1Id: userId,
       user2Id: id,
+      status: "request",
     });
     console.log("friend KLOOO:>> ", friend);
-    if (friend && friend.status === "request") {
+    if (friend) {
       friend.status = "friend";
       await friend.save();
 
