@@ -12,6 +12,7 @@ import { fileURLToPath } from "url";
 import authRoutes from "./routes/auth.js";
 import userRoutes from "./routes/users.js";
 import postRoutes from "./routes/posts.js";
+import friendRoutes from "./routes/friends.js";
 import notificationRoutes from "./routes/notification.js";
 import commentRoutes from "./routes/comment.js";
 import { register } from "./controllers/auth.js";
@@ -57,6 +58,7 @@ app.post("/posts", verifyToken, upload.single("picture"), createPost);
 app.use("/auth", authRoutes);
 app.use("/users", userRoutes);
 app.use("/posts", postRoutes);
+app.use("/friends", friendRoutes);
 app.use("/notifications", notificationRoutes);
 app.use("/comments", commentRoutes);
 
