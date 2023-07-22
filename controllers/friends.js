@@ -21,8 +21,9 @@ export const createFriendRequest = async (req, res) => {
       friendId: friend,
     });
     await notification.save();
+    console.log("notification  PAR ICI:>> ", notification);
 
-    await emitNotification(userId, notification);
+    await emitNotification(userId, notification._id);
 
     res.status(200).json(friend);
   } catch (err) {
@@ -40,7 +41,7 @@ export const acceptFriendRequest = async (req, res) => {
       user2Id: id,
       status: "request",
     });
-    console.log("friend KLOOO:>> ", friend);
+
     if (friend) {
       friend.status = "friend";
       await friend.save();
@@ -52,7 +53,7 @@ export const acceptFriendRequest = async (req, res) => {
       });
       await notification.save();
 
-      await emitNotification(userId, notification);
+      await emitNotification(userId, notification._id);
 
       res.status(200).json(friend);
     }

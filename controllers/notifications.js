@@ -46,15 +46,12 @@ export const markSeen = async (req, res) => {
   try {
     const { id } = req.user;
 
-    console.log("avant1");
     const update = await Notification.updateMany(
       { userId: id, seen: false },
       { $set: { seen: true } }
     );
-    console.log("avant");
     res.status(200).json({ status: "ok", update });
   } catch (err) {
-    console.log("après");
     res.status(404).json({ message: err.message });
   }
 };
