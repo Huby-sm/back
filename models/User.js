@@ -29,6 +29,10 @@ const UserSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
+    role: {
+      type: String,
+      default: "user", // user - admin - bde
+    },
     friends: {
       type: Array,
       default: [],
