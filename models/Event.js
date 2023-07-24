@@ -3,6 +3,11 @@ import { Schema } from "mongoose";
 
 const EventSchema = new mongoose.Schema(
     {
+        userId: {
+            type: Schema.Types.ObjectId,
+            ref: "User",
+            required: true,
+        },
         title: {
             type: String,
             required: true,
