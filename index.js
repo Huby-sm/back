@@ -9,12 +9,6 @@ import morgan from "morgan";
 import nodemailer from "nodemailer";
 import path from "path";
 import { fileURLToPath } from "url";
-import authRoutes from "./routes/auth.js";
-import userRoutes from "./routes/users.js";
-import postRoutes from "./routes/posts.js";
-import friendRoutes from "./routes/friends.js";
-import notificationRoutes from "./routes/notification.js";
-import commentRoutes from "./routes/comment.js";
 import { register } from "./controllers/auth.js";
 import { createPost } from "./controllers/posts.js";
 import { verifyToken } from "./middleware/auth.js";
@@ -24,6 +18,14 @@ import { users, posts } from "./data/index.js";
 import setupSocketIO from "./socketio/setup.js";
 import { cleanSocketIds } from "./socketio/setup.js";
 import fastTest from "./fastTest.js";
+
+import authRoutes from "./routes/auth.js";
+import userRoutes from "./routes/users.js";
+import postRoutes from "./routes/posts.js";
+import friendRoutes from "./routes/friends.js";
+import notificationRoutes from "./routes/notification.js";
+import commentRoutes from "./routes/comment.js";
+import eventRoutes from "./routes/events.js";
 
 /* CONFIGURATIONS */
 const __filename = fileURLToPath(import.meta.url);
@@ -61,7 +63,7 @@ app.use("/posts", postRoutes);
 app.use("/friends", friendRoutes);
 app.use("/notifications", notificationRoutes);
 app.use("/comments", commentRoutes);
-app.use("/events", eventRoutes);
+app.use("/event", eventRoutes);
 
 /* MONGOOSE SETUP */
 const PORT = process.env.PORT || 6001;
