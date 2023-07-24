@@ -61,6 +61,7 @@ app.use("/posts", postRoutes);
 app.use("/friends", friendRoutes);
 app.use("/notifications", notificationRoutes);
 app.use("/comments", commentRoutes);
+app.use("/events", eventRoutes);
 
 /* MONGOOSE SETUP */
 const PORT = process.env.PORT || 6001;
