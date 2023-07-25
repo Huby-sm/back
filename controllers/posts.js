@@ -1,5 +1,6 @@
 import Post from "../models/Post.js";
 import User from "../models/User.js";
+import { removeAllInstances } from "../utils/index.js";
 
 /* CREATE */
 //retour un seul post //
@@ -107,17 +108,18 @@ export const likePost = async (req, res) => {
     const { id } = req.params;
     const { userId } = req.body;
     const post = await Post.findById(id);
-    const isLiked = post.likes.get(userId);
+    const likes = [...post.likes].map((e) => e.toString());
+    const isLiked = likes.includes(userId);
 
     if (isLiked) {
-      post.likes.delete(userId);
+      removeAllInstances(likes, userId);
     } else {
-      post.likes.set(userId, true);
+      likes.push(userId);
     }
 
     const updatedPost = await Post.findByIdAndUpdate(
       id,
-      { likes: post.likes },
+      { likes },
       { new: true }
     );
 
