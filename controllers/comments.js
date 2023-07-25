@@ -2,43 +2,42 @@ import Post from "../models/Post.js";
 import User from "../models/User.js";
 import Comment from "../models/Comment.js";
 
-    /* CREATE COMMENT*/
-    export const createComment = async (req, res) => {
-        try {
-            const { userId, postId, content } = req.body;
+/* CREATE COMMENT*/
+export const createComment = async (req, res) => {
+  try {
+    const { userId, postId, content } = req.body;
 
-            const newComment = new Comment({
-                userId: userId,
-                postId: postId,
-                content: content,
-            });
-            await newComment.save();
+    const newComment = new Comment({
+      userId: userId,
+      postId: postId,
+      content: content,
+    });
+    await newComment.save();
 
-            res.status(201).json(newComment);
-        } catch (err) {
-            res.status(409).json({ message: err.message });
-        }
-    };
+    res.status(201).json(newComment);
+  } catch (err) {
+    res.status(409).json({ message: err.message });
+  }
+};
 
-    /* READ COMMENT*/
-    export const getCommentInPost = async (req, res) => {
-        try {
-            //je recupère mon Post
-            const {postId} = req.params;
-            console.log("requete: " + req.params)
-            const comments =  await Comment.find({postId: postId}).exec();
+/* READ COMMENT*/
+export const getCommentInPost = async (req, res) => {
+  try {
+    //je recupère mon Post
+    const { postId } = req.params;
+    console.log("requete: " + req.params);
+    const comments = await Comment.find({ postId: postId }).exec();
 
-            res.status(200).json(comments);
-        } catch (err) {
-            res.status(404).json({ message: err.message });
-        }
-    };
+    res.status(200).json(comments);
+  } catch (err) {
+    res.status(404).json({ message: err.message });
+  }
+};
 
+/* UPDATE COMMENT*/
 
-    /* UPDATE COMMENT*/
-
-    /* COMMENTAIRE  */
-    /*export const getCommentByUserInPost = async (req, res) => {
+/* COMMENTAIRE  */
+/*export const getCommentByUserInPost = async (req, res) => {
         try {
             const { id } = req.params; // l'ID du post
             //const { userId } = req.body; // l'ID de l'utilisateur
