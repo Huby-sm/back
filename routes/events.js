@@ -11,4 +11,5 @@ router.post("/", verifyToken, createEvent);
 /* READ */
 router.get("/events", verifyToken, getEvents);
 
+//
 export default router;
