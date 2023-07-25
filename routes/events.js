@@ -8,5 +8,5 @@ const router = express.Router();
 /* READ */
 router.get("/", verifyToken, getEvents);
 
-//
+
 export default router;
