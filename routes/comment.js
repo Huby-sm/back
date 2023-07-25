@@ -1,7 +1,11 @@
 import express from "express";
 
 import { verifyToken } from "../middleware/auth.js";
-import {createComment,getCommentInPost} from "../controllers/comments.js";
+import {
+  createComment,
+  getCommentInPost,
+  likeComment,
+} from "../controllers/comments.js";
 
 const router = express.Router();
 
@@ -11,5 +15,7 @@ router.post("/", verifyToken, createComment);
 /* READ */
 router.get("/:postId", verifyToken, getCommentInPost);
 
-/*TEST*/
+/* UPDATE */
+router.patch("/:id/like", verifyToken, likeComment);
+
 export default router;

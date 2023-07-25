@@ -1,44 +1,74 @@
-import Post from "../models/Post.js";
-import User from "../models/User.js";
 import Comment from "../models/Comment.js";
+import { removeAllInstances } from "../utils/index.js";
 
-    /* CREATE COMMENT*/
-    export const createComment = async (req, res) => {
-        try {
-            const { userId, postId, content } = req.body;
+/* CREATE COMMENT*/
+export const createComment = async (req, res) => {
+  try {
+    const { userId, postId, content } = req.body;
 
-            const newComment = new Comment({
-                userId: userId,
-                postId: postId,
-                content: content,
-            });
-            await newComment.save();
+    const newComment = new Comment({
+      userId: userId,
+      postId: postId,
+      content: content,
+    });
+    await newComment.save();
 
-            res.status(201).json(newComment);
-        } catch (err) {
-            res.status(409).json({ message: err.message });
-        }
-    };
+    const comment = await Comment.findOne({ _id: newComment._id })
+      .populate("userId")
+      .exec();
 
-    /* READ COMMENT*/
-    export const getCommentInPost = async (req, res) => {
-        try {
-            //je recupère mon Post
-            const {postId} = req.params;
-            console.log("requete: " + req.params)
-            const comments =  await Comment.find({postId: postId}).exec();
+    res.status(201).json(comment);
+  } catch (err) {
+    res.status(409).json({ message: err.message });
+  }
+};
 
-            res.status(200).json(comments);
-        } catch (err) {
-            res.status(404).json({ message: err.message });
-        }
-    };
+/* READ COMMENT*/
+export const getCommentInPost = async (req, res) => {
+  try {
+    //je recupère mon Post
+    const { postId } = req.params;
 
+    const comments = await Comment.find({ postId: postId })
+      .populate("userId")
+      .sort({ createdAt: "desc" })
+      .exec();
 
-    /* UPDATE COMMENT*/
+    res.status(200).json(comments);
+  } catch (err) {
+    res.status(404).json({ message: err.message });
+  }
+};
 
-    /* COMMENTAIRE  */
-    /*export const getCommentByUserInPost = async (req, res) => {
+/* LIKE COMMENT */
+
+export const likeComment = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { userId } = req.body;
+    const comment = await Comment.findById(id);
+
+    const likes = [...comment.likes].map((e) => e.toString());
+    const isLiked = likes.includes(userId);
+
+    if (isLiked) {
+      removeAllInstances(likes, userId);
+    } else {
+      likes.push(userId);
+    }
+
+    await Comment.findByIdAndUpdate(id, { likes }, { new: true });
+
+    const savedComment = await Comment.findById(id).populate("userId").exec();
+
+    res.status(200).json(savedComment);
+  } catch (err) {
+    res.status(404).json({ message: err.message });
+  }
+};
+
+/* COMMENTAIRE  */
+/*export const getCommentByUserInPost = async (req, res) => {
         try {
             const { id } = req.params; // l'ID du post
             //const { userId } = req.body; // l'ID de l'utilisateur
