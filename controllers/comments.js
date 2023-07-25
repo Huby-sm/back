@@ -29,9 +29,10 @@ export const getCommentInPost = async (req, res) => {
   try {
     //je recupère mon Post
     const { postId } = req.params;
-    console.log("requete: " + req.params);
+
     const comments = await Comment.find({ postId: postId })
       .populate("userId")
+      .sort({ createdAt: "desc" })
       .exec();
 
     res.status(200).json(comments);
