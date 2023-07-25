@@ -1,6 +1,5 @@
-import Post from "../models/Post.js";
-import User from "../models/User.js";
 import Comment from "../models/Comment.js";
+import { removeAllInstances } from "../utils/index.js";
 
 /* CREATE COMMENT*/
 export const createComment = async (req, res) => {
@@ -41,7 +40,32 @@ export const getCommentInPost = async (req, res) => {
   }
 };
 
-/* UPDATE COMMENT*/
+/* LIKE COMMENT */
+
+export const likeComment = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { userId } = req.body;
+    const comment = await Comment.findById(id);
+
+    const likes = [...comment.likes].map((e) => e.toString());
+    const isLiked = likes.includes(userId);
+
+    if (isLiked) {
+      removeAllInstances(likes, userId);
+    } else {
+      likes.push(userId);
+    }
+
+    await Comment.findByIdAndUpdate(id, { likes }, { new: true });
+
+    const savedComment = await Comment.findById(id).populate("userId").exec();
+
+    res.status(200).json(savedComment);
+  } catch (err) {
+    res.status(404).json({ message: err.message });
+  }
+};
 
 /* COMMENTAIRE  */
 /*export const getCommentByUserInPost = async (req, res) => {
