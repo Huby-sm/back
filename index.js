@@ -8,6 +8,14 @@ import helmet from "helmet";
 import morgan from "morgan";
 import nodemailer from "nodemailer";
 import path from "path";
+import authRoutes from "./routes/auth.js";
+import userRoutes from "./routes/users.js";
+import postRoutes from "./routes/posts.js";
+import friendRoutes from "./routes/friends.js";
+import notificationRoutes from "./routes/notification.js";
+import commentRoutes from "./routes/comment.js";
+import eventRoutes from "./routes/events.js";
+
 import { fileURLToPath } from "url";
 import authRoutes from "./routes/auth.js";
 import userRoutes from "./routes/users.js";
