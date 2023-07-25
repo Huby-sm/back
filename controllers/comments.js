@@ -14,7 +14,11 @@ export const createComment = async (req, res) => {
     });
     await newComment.save();
 
-    res.status(201).json(newComment);
+    const comment = await Comment.findOne({ _id: newComment._id })
+      .populate("userId")
+      .exec();
+
+    res.status(201).json(comment);
   } catch (err) {
     res.status(409).json({ message: err.message });
   }
@@ -26,7 +30,9 @@ export const getCommentInPost = async (req, res) => {
     //je recupère mon Post
     const { postId } = req.params;
     console.log("requete: " + req.params);
-    const comments = await Comment.find({ postId: postId }).exec();
+    const comments = await Comment.find({ postId: postId })
+      .populate("userId")
+      .exec();
 
     res.status(200).json(comments);
   } catch (err) {
