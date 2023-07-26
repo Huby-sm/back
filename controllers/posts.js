@@ -71,10 +71,9 @@ export const getFeedPosts = async (req, res) => {
         },
       },
     ]);
-    console.log("post :>> ", post);
+
     res.status(200).json(post);
   } catch (err) {
-    console.log("err :>> ", err);
     res.status(404).json({ message: err.message });
   }
 };

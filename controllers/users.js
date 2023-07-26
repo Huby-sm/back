@@ -19,7 +19,23 @@ export const getUser = async (req, res) => {
       });
     }
 
-    res.status(200).json({ user, friend });
+    let friendCondition =
+      currentUserId !== id
+        ? [
+            { user1Id: id, user2Id: currentUserId, status: "friend" },
+            { user1Id: currentUserId, user2Id: id, status: "friend" },
+          ]
+        : [
+            { user1Id: currentUserId, status: "friend" },
+            { user2Id: currentUserId, status: "friend" },
+          ];
+
+    const friends = await Friend.find({ $or: friendCondition })
+      .populate("user1Id user2Id")
+      .exec();
+
+    console.log("friends :>> ", friends);
+    res.status(200).json({ user, friend, friends });
   } catch (err) {
     res.status(404).json({ message: err.message });
   }
