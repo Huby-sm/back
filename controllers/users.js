@@ -30,7 +30,9 @@ export const getUser = async (req, res) => {
             { user2Id: currentUserId, status: "friend" },
           ];
 
-    const friends = await Friend.find({ $or: friendCondition });
+    const friends = await Friend.find({ $or: friendCondition })
+      .populate("user1Id user2Id")
+      .exec();
 
     console.log("friends :>> ", friends);
     res.status(200).json({ user, friend, friends });
