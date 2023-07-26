@@ -18,6 +18,8 @@ export const register = async (req, res) => {
       friends,
       location,
       occupation,
+      promo,
+      filiere,
     } = req.body;
 
     const salt = await bcrypt.genSalt();
@@ -32,6 +34,8 @@ export const register = async (req, res) => {
       friends,
       location,
       occupation,
+      promo,
+      filiere,
     });
     const savedUser = await newUser.save();
     res.status(201).json(savedUser);
