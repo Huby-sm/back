@@ -24,7 +24,7 @@ export const createEvent = async (req, res) => {
 /*READ EVENTS*/
 export const getEvents = async (req, res) => {
     try {
-        const events = await Event.find();
+        const events = await Event.find().sort({ _id: -1 });
         res.status(200).json(events);
     } catch (err) {
         res.status(404).json({ message: err.message });
