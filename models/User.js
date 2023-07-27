@@ -42,6 +42,8 @@ const UserSchema = new mongoose.Schema(
         type: String,
       },
     ],
+    promo: String,
+    filiere: String,
     location: String,
     occupation: String,
     viewedProfile: Number,
