@@ -9,7 +9,7 @@ const router = express.Router();
 router.post("/", verifyToken, createEvent);
 
 /* READ */
-router.get("/events", verifyToken, getEvents);
+router.get("/", verifyToken, getEvents);
 
 
 export default router;
