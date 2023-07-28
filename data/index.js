@@ -125,6 +125,7 @@ export const users = [
         __v: 0,
     },
 ];
+    //export consts events
 
 export const posts = [
     {

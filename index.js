@@ -15,6 +15,7 @@ import postRoutes from "./routes/posts.js";
 import friendRoutes from "./routes/friends.js";
 import notificationRoutes from "./routes/notification.js";
 import commentRoutes from "./routes/comment.js";
+import eventRoutes from "./routes/events.js";
 import { register } from "./controllers/auth.js";
 import { createPost } from "./controllers/posts.js";
 import { verifyToken } from "./middleware/auth.js";
@@ -61,6 +62,7 @@ app.use("/posts", postRoutes);
 app.use("/friends", friendRoutes);
 app.use("/notifications", notificationRoutes);
 app.use("/comments", commentRoutes);
+app.use("/events", eventRoutes);
 
 /* MONGOOSE SETUP */
 const PORT = process.env.PORT || 6001;
