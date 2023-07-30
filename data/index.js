@@ -117,6 +117,7 @@ export const users = [
         email: "jessicadunn@gmail.com",
         password: "$2b$10$dsasdgsagasda//G9JxQ4bQ8KXf4OAIe/X/AK9skyWUy",
         picturePath: "p9.jpeg",
+        role: "bde",
         friends: [],
         filiere: "marketing",
         promo: "B1",

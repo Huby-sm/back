@@ -8,7 +8,8 @@ import { isAdmin } from "../middleware/admin.js";
 const router = express.Router();
 
 /* CREATE */
-router.post("/", [verifyToken, isBde, isAdmin], createEvent);
+router.post("/", [verifyToken, isAdmin], createEvent);
+router.post("/", [verifyToken, isBde], createEvent);
 
 /* READ */
 router.get("/", verifyToken, getEvents);
