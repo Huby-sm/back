@@ -60,8 +60,10 @@ const setupSocketIO = async (app, PORT) => {
 
     socket.once("disconnect", async () => {
       const user = await User.findOne({ _id: id });
-      removeAllInstances(user.socketIds, socket.id);
-      await user.save();
+      if (user) {
+        removeAllInstances(user.socketIds, socket.id);
+        await user.save();
+      }
     });
   });
 
