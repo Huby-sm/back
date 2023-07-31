@@ -21,7 +21,7 @@ export const createReporting = async (req, res) => {
       reporter: id,
     });
 
-    if (!reporting) {
+    if (reporting) {
       return res.status(200).json({ message: "reporting already created" });
     }
 
