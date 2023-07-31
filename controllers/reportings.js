@@ -1,9 +1,23 @@
-import User from "../models/User.js";
 import Reporting from "../models/Reporting.js";
 
 export const listReportings = async (req, res) => {
   try {
-    const reportings = await Reporting.find().sort({ createdAt: "desc" });
+    const reportings = await Reporting.find()
+      .populate("post comment reporter")
+      .populate({
+        path: "comment",
+        populate: {
+          path: "userId",
+        },
+      })
+      .populate({
+        path: "post",
+        populate: {
+          path: "userId",
+        },
+      })
+      .sort({ createdAt: "desc" })
+      .exec();
 
     res.status(201).json(reportings);
   } catch (err) {
