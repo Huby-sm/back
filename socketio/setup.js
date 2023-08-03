@@ -50,20 +50,32 @@ const setupSocketIO = async (app, PORT) => {
       process.env.JWT_SECRET
     );
 
-    const user = await User.findOne({ _id: id });
+    /*const user = await User.findOne({ _id: id });
     user.socketIds.push(socket.id);
-    await user.save();
-
+    await user.save();INITIAL*/
+    const user = await User.findOneAndUpdate(
+        { _id: id },
+        { $push: { socketIds: socket.id } },
+        { new: true }
+    );
+    io.to(socket.id).emit('user connected', { user });
     // io.sockets.sockets
     //   .get(socket.id)
     //   .emit("notification", { data: "PAR ICI MA GUEULE" });
 
-    socket.once("disconnect", async () => {
+    /*socket.once("disconnect", async () => {
       const user = await User.findOne({ _id: id });
       if (user) {
         removeAllInstances(user.socketIds, socket.id);
         await user.save();
       }
+    });
+  });INITIAL*/
+    socket.once("disconnect", async () => {
+      await User.findOneAndUpdate(
+          { _id: id },
+          { $pull: { socketIds: socket.id } }
+      );
     });
   });
 

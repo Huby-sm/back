@@ -42,7 +42,7 @@ app.use(cors());
 app.use("/assets", express.static(path.join(__dirname, "public/assets")));
 
 /* FILE STORAGE */
-const storage = multer.diskStorage({
+/*const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, "public/assets");
   },
@@ -50,7 +50,11 @@ const storage = multer.diskStorage({
     cb(null, file.originalname);
   },
 });
-const upload = multer({ storage });
+const upload = multer({ storage });*/
+
+//Multer Valentin S3*
+const storage = multer.memoryStorage()
+const upload = multer({ storage: storage })
 
 /* ROUTES WITH FILES */
 app.post("/auth/register", upload.single("picture"), register);
