@@ -10,7 +10,9 @@ export const createConversation = async (req, res) => {
         { user1: userId, user2: currentUserId },
         { user1: currentUserId, user2: userId },
       ],
-    });
+    })
+      .populate("user1 user2")
+      .exec();
 
     if (conversation) {
       return res.status(200).json(conversation);
@@ -22,6 +24,31 @@ export const createConversation = async (req, res) => {
     });
 
     await conversation.save();
+
+    conversation = await Conversation.findOne({ _id: conversation._id })
+      .populate("user1 user2")
+      .exec();
+
+    res.status(200).json(conversation);
+  } catch (err) {
+    res.status(404).json({ message: err.message });
+  }
+};
+
+export const readConversation = async (req, res) => {
+  try {
+    const { id: currentUserId } = req.user;
+    const { userId } = req.params;
+
+    let conversation = await Conversation.findOne({
+      $or: [
+        { user1: userId, user2: currentUserId },
+        { user1: currentUserId, user2: userId },
+      ],
+    })
+      .populate("user1 user2")
+      .exec();
+
     res.status(200).json(conversation);
   } catch (err) {
     res.status(404).json({ message: err.message });
