@@ -87,6 +87,7 @@ export const listConversations = async (req, res) => {
       { messages: { $slice: -1 } }
     )
       .populate("user1 user2")
+      .sort({ updatedAt: -1 })
       .exec();
 
     res.status(200).json(conversations);

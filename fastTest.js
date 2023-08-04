@@ -34,8 +34,9 @@ const test = async () => {
   //   { messages: { $slice: -1 } }
   // )
   //   .populate("user1 user2")
+  //   .sort({ updatedAt: -1 })
   //   .exec();
-  // console.log("conversations :>> ", conversations[0].messages);
+  // console.log("conversations :>> ", conversations);
   // await sleep(5000);
   // const users = await User.find({ _id: "64b667da48396b12212f1654" });
   // const posts = await Post.find({});
