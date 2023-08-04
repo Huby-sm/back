@@ -52,9 +52,12 @@ app.use("/assets", express.static(path.join(__dirname, "public/assets")));
 });
 const upload = multer({ storage });*/
 
-//Multer Valentin S3*
+//Multer Valentin S3* fichier séparé
 const storage = multer.memoryStorage()
 const upload = multer({ storage: storage })
+
+upload.single('picturePath')
+//Multer Valentin S3*
 
 /* ROUTES WITH FILES */
 app.post("/auth/register", upload.single("picture"), register);
