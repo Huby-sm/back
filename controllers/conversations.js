@@ -54,3 +54,24 @@ export const readConversation = async (req, res) => {
     res.status(404).json({ message: err.message });
   }
 };
+
+export const createMessage = async (req, res) => {
+  try {
+    const { id: currentUserId } = req.user;
+    const { conversationId, content } = req.params;
+
+    let conversation = await Conversation.findOne({ _id: conversationId });
+
+    conversation.messages.push({
+      content: content,
+      sender: currentUserId,
+    });
+
+    await conversation.save();
+
+    const lastMessage = conversation.messages.slice(-1)[0];
+    res.status(200).json(lastMessage);
+  } catch (err) {
+    res.status(404).json({ message: err.message });
+  }
+};
