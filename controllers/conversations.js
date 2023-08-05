@@ -95,3 +95,23 @@ export const listConversations = async (req, res) => {
     res.status(404).json({ message: err.message });
   }
 };
+
+export const getConversationsNotificationsNumber = async (req, res) => {
+  try {
+    const { id: currentUserId } = req.user;
+
+    let conversations = await Conversation.find({
+      $or: [{ user1: currentUserId }, { user2: currentUserId }],
+    });
+
+    const notificationsCount = conversations.filter((e) => {
+      const userPosition = currentUserId === e.user1 ? 1 : 2;
+
+      return e.lastSeenMessage === e["lastSeenMessageUser" + userPosition];
+    });
+
+    res.status(200).json({ notificationsCount });
+  } catch (err) {
+    res.status(404).json({ message: err.message });
+  }
+};

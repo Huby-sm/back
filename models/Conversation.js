@@ -22,6 +22,9 @@ const ConversationSchema = new mongoose.Schema(
       required: true,
     },
     messages: [MessageSchema],
+    lastSeenMessage: String,
+    lastSeenMessageUser1: String,
+    lastSeenMessageUser2: String,
   },
   { timestamps: true }
 );

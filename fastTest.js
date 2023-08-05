@@ -12,6 +12,11 @@ const test = async () => {
   //   user1: "64b667da48396b12212f1654",
   //   user2: "64bc21377a0aa1a095b413d9",
   // });
+  // conv.messages.push({
+  //   content: "message3",
+  //   sender: "64b667da48396b12212f1654",
+  // });
+  // console.log("conv :>> ", conv);
   // await conv.save();
   // console.log(conv);
   // const conv = await Conversation.findOne(
