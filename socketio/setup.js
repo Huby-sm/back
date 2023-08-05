@@ -58,6 +58,14 @@ const setupSocketIO = async (app, PORT) => {
     //   .get(socket.id)
     //   .emit("notification", { data: "PAR ICI MA GUEULE" });
 
+    socket.on("joinConversation", async (conversationId) => {
+      socket.join("conversation:" + conversationId);
+    });
+
+    socket.on("exitConversation", async (conversationId) => {
+      socket.leave("conversation:" + conversationId);
+    });
+
     socket.once("disconnect", async () => {
       console.log("ici");
       const user = await User.findOne({ _id: id });
