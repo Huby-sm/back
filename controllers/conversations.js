@@ -39,11 +39,23 @@ export const createConversation = async (req, res) => {
 
 export const readConversation = async (req, res) => {
   try {
+    const { id: currentUserId } = req.user;
     const { conversationId } = req.params;
 
     let conversation = await Conversation.findOne({ _id: conversationId })
       .populate("user1 user2")
       .exec();
+
+    const userPosition = currentUserId === conversation.user1 ? 1 : 2;
+    if (
+      conversation["lastSeenMessageUser" + userPosition] !==
+      conversation.lastSeenMessage
+    ) {
+      conversation["lastSeenMessageUser" + userPosition] =
+        conversation.lastSeenMessage;
+
+      await conversation.save();
+    }
 
     res.status(200).json(conversation);
   } catch (err) {
@@ -57,11 +69,13 @@ export const createMessage = async (req, res) => {
     const { conversationId, content } = req.body;
 
     let conversation = await Conversation.findOne({ _id: conversationId });
-    const userPosition = currentUserId === conversation.user1 ? 1 : 2;
-    const otherUserPosition = currentUserId === conversation.user1 ? 1 : 2;
+
+    const userPosition =
+      currentUserId === conversation.user1.toString() ? 1 : 2;
+    const otherUserPosition =
+      currentUserId === conversation.user1.toString() ? 2 : 1;
     const otherUserId = conversation["user" + otherUserPosition];
     const otherUser = await User.findOne({ _id: otherUserId });
-
     const otherSeen = otherUser.socketIds.some((socketId) =>
       io.sockets.sockets
         .get(socketId)
@@ -87,7 +101,7 @@ export const createMessage = async (req, res) => {
     otherUser.socketIds.forEach((socketId) =>
       io.sockets.sockets
         .get(socketId)
-        .emit("newMessage", JSON.stringify(lastMessage))
+        .emit("newMessage", JSON.stringify({ conversationId, lastMessage }))
     );
 
     res.status(200).json(lastMessage);
