@@ -39,15 +39,9 @@ export const createConversation = async (req, res) => {
 
 export const readConversation = async (req, res) => {
   try {
-    const { id: currentUserId } = req.user;
-    const { userId } = req.params;
+    const { conversationId } = req.params;
 
-    let conversation = await Conversation.findOne({
-      $or: [
-        { user1: userId, user2: currentUserId },
-        { user1: currentUserId, user2: userId },
-      ],
-    })
+    let conversation = await Conversation.findOne({ _id: conversationId })
       .populate("user1 user2")
       .exec();
 
@@ -60,7 +54,7 @@ export const readConversation = async (req, res) => {
 export const createMessage = async (req, res) => {
   try {
     const { id: currentUserId } = req.user;
-    const { conversationId, content } = req.params;
+    const { conversationId, content } = req.body;
 
     let conversation = await Conversation.findOne({ _id: conversationId });
     const userPosition = currentUserId === e.user1 ? 1 : 2;
