@@ -1,4 +1,6 @@
 import Conversation from "../models/Conversation.js";
+import User from "../models/User.js";
+import { io } from "../socketio/setup.js";
 
 export const createConversation = async (req, res) => {
   try {
@@ -61,15 +63,39 @@ export const createMessage = async (req, res) => {
     const { conversationId, content } = req.params;
 
     let conversation = await Conversation.findOne({ _id: conversationId });
+    const userPosition = currentUserId === e.user1 ? 1 : 2;
+    const otherUserPosition = currentUserId === e.user1 ? 1 : 2;
+    const otherUserId = conversation["lastSeenMessageUser" + otherUserPosition];
+    const otherUser = await User.findOne({ _id: otherUserId });
+
+    const otherSeen = otherUser.socketIds.some((socketId) =>
+      io.sockets.sockets
+        .get(socketId)
+        .rooms.has("conversation:" + conversationId)
+    );
 
     conversation.messages.push({
       content: content,
       sender: currentUserId,
     });
 
+    const lastMessage = conversation.messages.slice(-1)[0];
+
+    conversation.lastSeenMessage = lastMessage._id;
+    conversation["lastSeenMessageUser" + userPosition] = lastMessage._id;
+
+    if (otherSeen) {
+      conversation["lastSeenMessageUser" + otherUserPosition] = lastMessage._id;
+    }
+
     await conversation.save();
 
-    const lastMessage = conversation.messages.slice(-1)[0];
+    otherUser.socketIds.forEach((socketId) =>
+      io.sockets.sockets
+        .get(socketId)
+        .emit("newMessage", JSON.stringify(lastMessage))
+    );
+
     res.status(200).json(lastMessage);
   } catch (err) {
     res.status(404).json({ message: err.message });
