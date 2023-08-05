@@ -130,13 +130,15 @@ export const getConversationsNotificationsNumber = async (req, res) => {
       $or: [{ user1: currentUserId }, { user2: currentUserId }],
     });
 
-    const notificationsCount = conversations.filter((e) => {
-      const userPosition = currentUserId === e.user1 ? 1 : 2;
+    const listConversationsNotRead = conversations
+      .filter((e) => {
+        const userPosition = currentUserId === e.user1 ? 1 : 2;
 
-      return e.lastSeenMessage === e["lastSeenMessageUser" + userPosition];
-    });
+        return e.lastSeenMessage === e["lastSeenMessageUser" + userPosition];
+      })
+      .map((e) => e._id);
 
-    res.status(200).json({ notificationsCount });
+    res.status(200).json({ listConversationsNotRead });
   } catch (err) {
     res.status(404).json({ message: err.message });
   }
