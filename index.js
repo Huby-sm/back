@@ -63,8 +63,25 @@ aws.config.update({
     region: process.env.BUCKET_REGION,
 });
 
+const s3 = new aws.S3();
+
+const upload = multer({
+  storage: multerS3({
+    s3: s3,
+    bucket: process.env.BUCKET_NAME,
+    acl: 'public-read', // Les fichiers téléchargés seront publiquement accessibles
+    metadata: function (req, file, cb) {
+      cb(null, {fieldName: file.fieldname});
+    },
+    key: function (req, file, cb) {
+      // Nous utilisons l'horodatage + nom original du fichier pour éviter les doublons
+      cb(null, Date.now().toString() + '-' + file.originalname)
+    }
+  })
+});
+
 const storage = multer.memoryStorage()
-const upload = multer({ storage: storage })
+//const upload = multer({ storage: storage })
 
 upload.single('picturePath')
 //Multer Valentin S3*
