@@ -4,6 +4,8 @@ import mongoose, { mongo } from "mongoose";
 import cors from "cors";
 import dotenv from "dotenv";
 import multer from "multer";
+import multerS3 from "multer-s3";
+import aws from "aws-sdk";
 import helmet from "helmet";
 import morgan from "morgan";
 import nodemailer from "nodemailer";
@@ -52,7 +54,15 @@ app.use("/assets", express.static(path.join(__dirname, "public/assets")));
 });
 const upload = multer({ storage });*/
 
+
 //Multer Valentin S3* fichier séparé
+// Configure AWS SDK
+aws.config.update({
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    region: process.env.BUCKET_REGION,
+});
+
 const storage = multer.memoryStorage()
 const upload = multer({ storage: storage })
 
