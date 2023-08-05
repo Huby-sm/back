@@ -57,9 +57,9 @@ export const createMessage = async (req, res) => {
     const { conversationId, content } = req.body;
 
     let conversation = await Conversation.findOne({ _id: conversationId });
-    const userPosition = currentUserId === e.user1 ? 1 : 2;
-    const otherUserPosition = currentUserId === e.user1 ? 1 : 2;
-    const otherUserId = conversation["lastSeenMessageUser" + otherUserPosition];
+    const userPosition = currentUserId === conversation.user1 ? 1 : 2;
+    const otherUserPosition = currentUserId === conversation.user1 ? 1 : 2;
+    const otherUserId = conversation["user" + otherUserPosition];
     const otherUser = await User.findOne({ _id: otherUserId });
 
     const otherSeen = otherUser.socketIds.some((socketId) =>
