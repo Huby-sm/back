@@ -6,6 +6,7 @@ import dotenv from "dotenv";
 import multer from "multer";
 import multerS3 from "multer-s3";
 import aws from "aws-sdk";
+import { S3Client } from "@aws-sdk/client-s3";
 import helmet from "helmet";
 import morgan from "morgan";
 import nodemailer from "nodemailer";
@@ -57,13 +58,13 @@ const upload = multer({ storage });*/
 
 //Multer Valentin S3* fichier séparé
 // Configure AWS SDK
-aws.config.update({
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+const s3 = new S3Client({
+  region: process.env.BUCKET_REGION,
+  credentials: {
     accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-    region: process.env.BUCKET_REGION,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  },
 });
-
-const s3 = new aws.S3();
 
 const upload = multer({
   storage: multerS3({
@@ -80,10 +81,10 @@ const upload = multer({
   })
 });
 
-const storage = multer.memoryStorage()
+//const storage = multer.memoryStorage()
 //const upload = multer({ storage: storage })
 
-upload.single('picturePath')
+//upload.single('picturePath')
 //Multer Valentin S3*
 
 /* ROUTES WITH FILES */
