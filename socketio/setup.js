@@ -1,5 +1,6 @@
 import { createServer } from "http";
 import { Server } from "socket.io";
+import { instrument } from "@socket.io/admin-ui";
 import jwt from "jsonwebtoken";
 
 import User from "../models/User.js";
@@ -39,9 +40,16 @@ const setupSocketIO = async (app, PORT) => {
   io = new Server(httpServer, {
     /* options */
     cors: {
-      origin: "*",
+      // origin: "*",
+      origin: ["https://admin.socket.io", "http://localhost:3000"],
+      credentials: true,
       methods: ["GET", "POST", "OPTIONS"],
     },
+  });
+
+  instrument(io, {
+    auth: false,
+    mode: "development",
   });
 
   io.on("connection", async (socket) => {

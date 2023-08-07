@@ -3,7 +3,6 @@ import Post from "./models/Post.js";
 import Notification from "./models/Notification.js";
 import Conversation from "./models/Conversation.js";
 import { io } from "./socketio/setup.js";
-import { cp } from "fs";
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
@@ -23,6 +22,8 @@ const test = async () => {
   //   { _id: "64ccdd14bae0cfc10a308c46" },
   //   { messages: { $slice: -1 } }
   // );
+  // const conv = await Conversation.findOne({ _id: "64ccdd14bae0cfc10a308c46" });
+  // console.log("conv :>> ", conv);
   // conv.messages.push({
   //   content: "message3",
   //   sender: "64b667da48396b12212f1654",
