@@ -27,9 +27,7 @@ export const createConversation = async (req, res) => {
 
     await conversation.save();
 
-    conversation = await Conversation.findOne({ _id: conversation._id })
-      .populate("user1 user2")
-      .exec();
+    conversation = await Conversation.findOne({ _id: conversation._id });
 
     res.status(200).json(conversation);
   } catch (err) {
@@ -46,7 +44,6 @@ export const readConversation = async (req, res) => {
       .populate("user1 user2")
       .exec();
 
-    console.log("currentUserId :>> ", currentUserId);
     const userPosition =
       currentUserId === conversation.user1._id.toString() ? 1 : 2;
     if (
@@ -59,9 +56,6 @@ export const readConversation = async (req, res) => {
       await conversation.save();
     }
 
-    console.log("userPosition :>> ", userPosition);
-
-    console.log("conversation :>> ", conversation);
     res.status(200).json(conversation);
   } catch (err) {
     res.status(404).json({ message: err.message });
