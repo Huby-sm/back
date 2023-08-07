@@ -139,9 +139,8 @@ export const getConversationsNotificationsNumber = async (req, res) => {
 
     const listConversationsNotRead = conversations
       .filter((e) => {
-        const userPosition = currentUserId === e.user1 ? 1 : 2;
-
-        return e.lastSeenMessage === e["lastSeenMessageUser" + userPosition];
+        const userPosition = currentUserId === e.user1.toString() ? 1 : 2;
+        return e.lastSeenMessage !== e["lastSeenMessageUser" + userPosition];
       })
       .map((e) => e._id);
 
