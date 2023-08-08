@@ -34,7 +34,6 @@ export const getUser = async (req, res) => {
       .populate("user1Id user2Id")
       .exec();
 
-    console.log("friends :>> ", friends);
     res.status(200).json({ user, friend, friends });
   } catch (err) {
     res.status(404).json({ message: err.message });

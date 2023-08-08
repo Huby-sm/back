@@ -1,5 +1,6 @@
 import { createServer } from "http";
 import { Server } from "socket.io";
+import { instrument } from "@socket.io/admin-ui";
 import jwt from "jsonwebtoken";
 
 import User from "../models/User.js";
@@ -39,9 +40,16 @@ const setupSocketIO = async (app, PORT) => {
   io = new Server(httpServer, {
     /* options */
     cors: {
-      origin: "*",
+      // origin: "*",
+      origin: ["https://admin.socket.io", "http://localhost:3000"],
+      credentials: true,
       methods: ["GET", "POST", "OPTIONS"],
     },
+  });
+
+  instrument(io, {
+    auth: false,
+    mode: "development",
   });
 
   io.on("connection", async (socket) => {
@@ -58,8 +66,18 @@ const setupSocketIO = async (app, PORT) => {
     //   .get(socket.id)
     //   .emit("notification", { data: "PAR ICI MA GUEULE" });
 
+    socket.on("joinConversation", async (conversationId) => {
+      socket.join("conversation:" + conversationId);
+    });
+
+    socket.on("exitConversation", async (conversationId) => {
+      socket.leave("conversation:" + conversationId);
+    });
+
     socket.once("disconnect", async () => {
+      console.log("ici");
       const user = await User.findOne({ _id: id });
+      console.log("user2 :>> ", user);
       if (user) {
         removeAllInstances(user.socketIds, socket.id);
         await user.save();
