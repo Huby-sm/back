@@ -3,14 +3,11 @@ import bodyParser from "body-parser";
 import mongoose, { mongo } from "mongoose";
 import cors from "cors";
 import dotenv from "dotenv";
-import multer from "multer";
-import multerS3 from "multer-s3";
-import aws from "aws-sdk";
-import { S3Client } from "@aws-sdk/client-s3";
+dotenv.config({ path: '.env' });
+import path from 'path';
 import helmet from "helmet";
 import morgan from "morgan";
 import nodemailer from "nodemailer";
-import path from "path";
 import { fileURLToPath } from "url";
 import authRoutes from "./routes/auth.js";
 import userRoutes from "./routes/users.js";
@@ -23,17 +20,16 @@ import reportingRoutes from "./routes/reportings.js";
 import { register } from "./controllers/auth.js";
 import { createPost } from "./controllers/posts.js";
 import { verifyToken } from "./middleware/auth.js";
-import User from "./models/User.js";
-import Post from "./models/Post.js";
-import { users, posts } from "./data/index.js";
 import setupSocketIO from "./socketio/setup.js";
 import { cleanSocketIds } from "./socketio/setup.js";
 import fastTest from "./fastTest.js";
+import  upload  from "./helpers/upload.helper.js";
 
 /* CONFIGURATIONS */
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 dotenv.config();
+console.log(process.env);
 const app = express();
 app.use(express.json());
 app.use(helmet());
@@ -43,6 +39,10 @@ app.use(bodyParser.json({ limit: "30mb", extended: true }));
 app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 app.use(cors());
 app.use("/assets", express.static(path.join(__dirname, "public/assets")));
+
+
+console.log('BUCKET_NAME_ici:', process.env.BUCKET_NAME);
+
 
 /* FILE STORAGE */
 /*const storage = multer.diskStorage({
@@ -54,42 +54,14 @@ app.use("/assets", express.static(path.join(__dirname, "public/assets")));
   },
 });
 const upload = multer({ storage });*/
+/* FILE STORAGE */
 
-
-//Multer Valentin S3* fichier séparé
-// Configure AWS SDK
-const s3 = new S3Client({
-  region: process.env.BUCKET_REGION,
-  credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-  },
-});
-
-const upload = multer({
-  storage: multerS3({
-    s3: s3,
-    bucket: process.env.BUCKET_NAME,
-    acl: 'public-read', // Les fichiers téléchargés seront publiquement accessibles
-    metadata: function (req, file, cb) {
-      cb(null, {fieldName: file.fieldname});
-    },
-    key: function (req, file, cb) {
-      // Nous utilisons l'horodatage + nom original du fichier pour éviter les doublons
-      cb(null, Date.now().toString() + '-' + file.originalname)
-    }
-  })
-});
-
-//const storage = multer.memoryStorage()
-//const upload = multer({ storage: storage })
-
-//upload.single('picturePath')
-//Multer Valentin S3*
 
 /* ROUTES WITH FILES */
-app.post("/auth/register", upload.single("picture"), register);
-app.post("/posts", verifyToken, upload.single("picture"), createPost);
+app.post("/auth/register", upload.single("picturePath"), register);
+app.post("/posts", verifyToken, upload.single("picturePath"), createPost);
+//app.post("/auth/register", uploadToS3, register);
+//app.post("/posts", verifyToken, uploadToS3,s3Uploader,createPost);
 
 /* ROUTES !!!!*/
 app.use("/auth", authRoutes);
