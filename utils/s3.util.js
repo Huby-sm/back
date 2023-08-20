@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
 dotenv.config({ path: '.env' });
-import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
+import { S3Client, PutObjectCommand, GetObjectCommand } from '@aws-sdk/client-s3';
 
 const config = {
     credentials: {
@@ -9,6 +9,7 @@ const config = {
     },
     region: process.env.BUCKET_REGION,
 };
+
 const s3 = new S3Client(config);
 
 export default s3;

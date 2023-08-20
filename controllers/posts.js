@@ -3,6 +3,7 @@ import User from "../models/User.js";
 import { removeAllInstances } from "../utils/index.js";
 import  upload  from "../helpers/upload.helper.js";
 
+
 /* CREATE */
 //retour un seul post //
 
@@ -113,6 +114,12 @@ export const getPost = async (req, res) => {
     const { postId } = req.params;
     const post = await Post.findOne(postId);
     const comments = await Comment.find({ post: post._id }).populate("user");
+
+    // Si le post a un picturePath, obtenez l'URL signée pour cette image.
+    /*if (post.picturePath) {
+      const signedUrl = await getSignedUrl(post.picturePath);
+      post.picturePath = signedUrl;
+    }*/
 
     res.status(200).json(comments);
   } catch (err) {

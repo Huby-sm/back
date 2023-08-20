@@ -5,6 +5,7 @@ import multerS3 from 'multer-s3';
 import multer from 'multer';
 import path from 'path';
 import s3  from '../utils/s3.util.js';
+import {GetObjectCommand} from "@aws-sdk/client-s3";
 
 const upload = multer({
     storage: multerS3({
@@ -18,4 +19,15 @@ const upload = multer({
         },
     }),
 });
+
+// Fonction pour obtenir une URL signée
+/*const getSignedUrl = async (picturePath) => {
+    const command = new GetObjectCommand({
+        Bucket: process.env.BUCKET_NAME,
+        Key: picturePath,
+    });
+
+    return s3.getSignedUrl(command);
+}*/
+
 export default upload;
