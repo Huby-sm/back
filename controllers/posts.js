@@ -1,14 +1,30 @@
 import Post from "../models/Post.js";
 import User from "../models/User.js";
 import { removeAllInstances } from "../utils/index.js";
+import  upload  from "../helpers/upload.helper.js";
+
 
 /* CREATE */
 //retour un seul post //
 
 export const createPost = async (req, res) => {
   try {
-    const { userId, description, picturePath } = req.body;
+    const { userId, description, /*picturePath*/ } = req.body;
+    //const picturePath = req.file.location;
     const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    upload.single("picturePath")(req, res, async (err) => {
+      if (err) {
+        console.error(err);
+        return res.status(409).json({ message: err.message });
+      }
+
+    const picturePath = req.file ? req.file.location : null;
+
+
     const newPost = new Post({
       userId,
       firstName: user.firstName,
@@ -17,7 +33,7 @@ export const createPost = async (req, res) => {
       description,
       userPicturePath: user.picturePath,
       picturePath,
-      likes: {},
+      likes: [],
       comments: [],
     });
     await newPost.save();
@@ -26,7 +42,9 @@ export const createPost = async (req, res) => {
     //** Tri des données dans l'ordre décroissant selon la date de création du post
     post.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
     res.status(201).json(post);
+    });
   } catch (err) {
+    console.error(err);
     res.status(409).json({ message: err.message });
   }
 };
@@ -74,6 +92,7 @@ export const getFeedPosts = async (req, res) => {
 
     res.status(200).json(post);
   } catch (err) {
+    console.error(err);
     res.status(404).json({ message: err.message });
   }
 };
@@ -84,6 +103,7 @@ export const getUserPosts = async (req, res) => {
     const post = await Post.find({ userId });
     res.status(200).json(post);
   } catch (err) {
+    console.error(err);
     res.status(404).json({ message: err.message });
   }
 };
@@ -95,8 +115,15 @@ export const getPost = async (req, res) => {
     const post = await Post.findOne(postId);
     const comments = await Comment.find({ post: post._id }).populate("user");
 
+    // Si le post a un picturePath, obtenez l'URL signée pour cette image.
+    /*if (post.picturePath) {
+      const signedUrl = await getSignedUrl(post.picturePath);
+      post.picturePath = signedUrl;
+    }*/
+
     res.status(200).json(comments);
   } catch (err) {
+    console.error(err);
     res.status(404).json({ message: err.message });
   }
 };
@@ -124,6 +151,7 @@ export const likePost = async (req, res) => {
 
     res.status(200).json(updatedPost);
   } catch (err) {
+    console.error(err);
     res.status(404).json({ message: err.message });
   }
 };
@@ -146,6 +174,7 @@ export const getCommentByUserInPost = async (req, res) => {
 
     res.status(200).json(comment); // Renvoyer le commentaire
   } catch (err) {
+    console.error(err);
     res.status(404).json({ message: err.message });
   }
 };
