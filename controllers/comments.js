@@ -40,6 +40,17 @@ export const getCommentInPost = async (req, res) => {
   }
 };
 
+export const deleteComment = async (req, res) => {
+  try {
+    const { commentId } = req.params;
+    await Comment.deleteOne({ _id: commentId });
+    return res.status(200).json({ status: "ok" });
+  } catch (err) {
+    console.error(err);
+    res.status(404).json({ message: err.message });
+  }
+};
+
 /* LIKE COMMENT */
 
 export const likeComment = async (req, res) => {
