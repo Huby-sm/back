@@ -176,6 +176,26 @@ export const getPost = async (req, res) => {
   }
 };
 
+export const deletePost = async (req, res) => {
+  try {
+    const { postId } = req.params;
+    const { id } = req.user;
+
+    const user = await User.findOne({ _id: id });
+    const post = await Post.findOne({ _id: postId });
+
+    if (user.role === "admin" || post.userId.toString() === id) {
+      await Post.deleteOne({ _id: postId });
+      return res.status(200).json({ status: "ok" });
+    }
+
+    res.status(403).json({ msg: "User is not authorized" });
+  } catch (err) {
+    console.error(err);
+    res.status(404).json({ message: err.message });
+  }
+};
+
 /* UPDATE */
 export const likePost = async (req, res) => {
   try {
