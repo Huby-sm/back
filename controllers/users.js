@@ -105,8 +105,8 @@ export const addRemoveFriend = async (req, res) => {
 
 export const checkBlocked = async (req, res) => {
   try {
-    const { userId } = req.params;
-    const user = await User.finById(userId);
+    const { id } = req.params;
+    const user = await User.findById(id);
 
     res.status(200).json({ blocked: user.blocked });
   } catch (err) {
