@@ -1,5 +1,7 @@
 import User from "../models/User.js";
 import Friend from "../models/Friend.js";
+import Notification from "../models/Notification.js";
+import { emitNotification } from "../socketio/setup.js";
 
 /* READ */
 export const getUser = async (req, res) => {
@@ -96,6 +98,40 @@ export const addRemoveFriend = async (req, res) => {
     );
 
     res.status(200).json(formattedFriends);
+  } catch (err) {
+    res.status(404).json({ message: err.message });
+  }
+};
+
+export const checkBlocked = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const user = await User.finById(userId);
+
+    res.status(200).json({ blocked: user.blocked });
+  } catch (err) {
+    res.status(404).json({ message: err.message });
+  }
+};
+
+export const toggleBlockUser = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const user = await User.finById(userId);
+
+    user.blocked = !user.blocked;
+    await user.save();
+
+    const notification = new Notification({
+      userId,
+      type: "block",
+      value: user.blocked,
+    });
+    await notification.save();
+
+    await emitNotification(userId, notification._id);
+
+    res.status(200).json(user);
   } catch (err) {
     res.status(404).json({ message: err.message });
   }

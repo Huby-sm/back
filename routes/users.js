@@ -4,6 +4,8 @@ import {
   getUserFriends,
   addRemoveFriend,
   getUsers,
+  checkBlocked,
+  toggleBlockUser,
 } from "../controllers/users.js";
 
 import { verifyToken } from "../middleware/auth.js";
@@ -15,8 +17,11 @@ const router = express.Router();
 router.get("/:id", verifyToken, getUser);
 router.get("/:id/friends", verifyToken, getUserFriends);
 router.get("/", [verifyToken, isAdmin], getUsers);
+router.get("/:id/blocked", verifyToken, checkBlocked);
 
 /* UPDATE */
 router.patch("/:id/:friendId", verifyToken, addRemoveFriend);
+
+router.post("/:id/blocked", [verifyToken, isAdmin], toggleBlockUser);
 
 export default router;
