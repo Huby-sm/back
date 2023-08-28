@@ -116,8 +116,9 @@ export const checkBlocked = async (req, res) => {
 
 export const toggleBlockUser = async (req, res) => {
   try {
-    const { userId } = req.params;
-    const user = await User.finById(userId);
+    const { id } = req.params;
+    const userId = id;
+    const user = await User.findById(userId);
 
     user.blocked = !user.blocked;
     await user.save();
