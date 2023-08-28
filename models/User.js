@@ -25,6 +25,10 @@ const UserSchema = new mongoose.Schema(
       required: true,
       min: 5,
     },
+    blocked: {
+      type: Boolean,
+      default: false,
+    },
     picturePath: {
       type: String,
       default: "",

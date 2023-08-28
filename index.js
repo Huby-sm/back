@@ -3,8 +3,8 @@ import bodyParser from "body-parser";
 import mongoose, { mongo } from "mongoose";
 import cors from "cors";
 import dotenv from "dotenv";
-dotenv.config({ path: '.env' });
-import path from 'path';
+dotenv.config({ path: ".env" });
+import path from "path";
 import helmet from "helmet";
 import morgan from "morgan";
 import nodemailer from "nodemailer";
@@ -24,13 +24,12 @@ import { verifyToken } from "./middleware/auth.js";
 import setupSocketIO from "./socketio/setup.js";
 import { cleanSocketIds } from "./socketio/setup.js";
 import fastTest from "./fastTest.js";
-import  upload  from "./helpers/upload.helper.js";
+import upload from "./helpers/upload.helper.js";
 
 /* CONFIGURATIONS */
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 dotenv.config();
-console.log(process.env);
 const app = express();
 app.use(express.json());
 app.use(helmet());
@@ -41,9 +40,7 @@ app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 app.use(cors());
 app.use("/assets", express.static(path.join(__dirname, "public/assets")));
 
-
-console.log('BUCKET_NAME_ici:', process.env.BUCKET_NAME);
-
+console.log("BUCKET_NAME_ici:", process.env.BUCKET_NAME);
 
 /* FILE STORAGE */
 /*const storage = multer.diskStorage({
@@ -56,7 +53,6 @@ console.log('BUCKET_NAME_ici:', process.env.BUCKET_NAME);
 });
 const upload = multer({ storage });*/
 /* FILE STORAGE */
-
 
 /* ROUTES WITH FILES */
 app.post("/auth/register", upload.single("picturePath"), register);
