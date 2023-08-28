@@ -75,13 +75,9 @@ const setupSocketIO = async (app, PORT) => {
     });
 
     socket.once("disconnect", async () => {
-      console.log("ici");
-      const user = await User.findOne({ _id: id });
-      console.log("user2 :>> ", user);
-      if (user) {
-        removeAllInstances(user.socketIds, socket.id);
-        await user.save();
-      }
+      console.log("ici = ✅✅✅✅✅✅✅✅✅✅");
+
+      await User.updateOne({ _id: id }, { $pull: { socketIds: socket.id } });
     });
   });
 
