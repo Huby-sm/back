@@ -126,7 +126,7 @@ export const toggleBlockUser = async (req, res) => {
     const notification = new Notification({
       userId,
       type: "block",
-      value: user.blocked,
+      data: { value: user.blocked },
     });
     await notification.save();
 
