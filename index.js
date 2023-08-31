@@ -56,16 +56,7 @@ const upload = multer({ storage });*/
 
 /* ROUTES WITH FILES */
 console.log("upload :>> ", upload);
-app.post(
-  "/auth/register",
-  (req, res, next) => {
-    console.log("req :>> ", req.body);
-
-    next();
-  },
-  upload.single("picturePath"),
-  register
-);
+app.post("/auth/register", upload.single("picturePath"), register);
 app.post("/posts", verifyToken, upload.single("picturePath"), createPost);
 app.post("/test_upload", upload.single("picturePath"), async (req, res) => {
   try {

@@ -16,32 +16,25 @@ export const createPost = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    upload.single("picturePath")(req, res, async (err) => {
-      if (err) {
-        console.error(err);
-        return res.status(409).json({ message: err.message });
-      }
+    const picturePath = req.file ? req.file.location : null;
 
-      const picturePath = req.file ? req.file.location : null;
-
-      const newPost = new Post({
-        userId,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        location: user.location,
-        description,
-        userPicturePath: user.picturePath,
-        picturePath,
-        likes: [],
-        comments: [],
-      });
-      await newPost.save();
-
-      const post = await Post.find();
-      //** Tri des données dans l'ordre décroissant selon la date de création du post
-      post.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-      res.status(201).json(post);
+    const newPost = new Post({
+      userId,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      location: user.location,
+      description,
+      userPicturePath: user.picturePath,
+      picturePath,
+      likes: [],
+      comments: [],
     });
+    await newPost.save();
+
+    const post = await Post.find();
+    //** Tri des données dans l'ordre décroissant selon la date de création du post
+    post.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    res.status(201).json(post);
   } catch (err) {
     console.error(err);
     res.status(409).json({ message: err.message });
