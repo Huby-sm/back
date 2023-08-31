@@ -49,6 +49,19 @@ export const getFeedPosts = async (req, res) => {
     const post = await Post.aggregate([
       {
         $lookup: {
+          from: "users", // The name of the Comment collection in the database
+          localField: "userId",
+          foreignField: "_id",
+          as: "user",
+        },
+      },
+      {
+        $addFields: {
+          user: { $arrayElemAt: ["$user", -1] }, // Get the last comment from the 'comments' array
+        },
+      },
+      {
+        $lookup: {
           from: "comments", // The name of the Comment collection in the database
           localField: "_id",
           foreignField: "postId",
@@ -141,7 +154,7 @@ export const getFeedPosts = async (req, res) => {
 export const getUserPosts = async (req, res) => {
   try {
     const { userId } = req.params;
-    const post = await Post.find({ userId });
+    const post = await Post.find({ userId }).populate("userId");
     res.status(200).json(post);
   } catch (err) {
     console.error(err);

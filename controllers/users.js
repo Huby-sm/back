@@ -137,3 +137,17 @@ export const toggleBlockUser = async (req, res) => {
     res.status(404).json({ message: err.message });
   }
 };
+
+export const updateProfilePicture = async (req, res) => {
+  try {
+    const { id: currentUserId } = req.user;
+    const user = await User.findById(currentUserId);
+
+    user.picturePath = req.file.location;
+    await user.save();
+
+    res.status(200).json(user);
+  } catch (err) {
+    res.status(404).json({ message: err.message });
+  }
+};

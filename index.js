@@ -1,6 +1,6 @@
 import express from "express";
 import bodyParser from "body-parser";
-import mongoose, { mongo } from "mongoose";
+import mongoose from "mongoose";
 import cors from "cors";
 import dotenv from "dotenv";
 dotenv.config({ path: ".env" });
@@ -20,6 +20,7 @@ import eventRoutes from "./routes/events.js";
 import reportingRoutes from "./routes/reportings.js";
 import { register } from "./controllers/auth.js";
 import { createPost } from "./controllers/posts.js";
+import { updateProfilePicture } from "./controllers/users.js";
 import { verifyToken } from "./middleware/auth.js";
 import setupSocketIO from "./socketio/setup.js";
 import { cleanSocketIds } from "./socketio/setup.js";
@@ -58,6 +59,12 @@ const upload = multer({ storage });*/
 console.log("upload :>> ", upload);
 app.post("/auth/register", upload.single("picturePath"), register);
 app.post("/posts", verifyToken, upload.single("picturePath"), createPost);
+app.put(
+  "/users/photo",
+  verifyToken,
+  upload.single("picturePath"),
+  updateProfilePicture
+);
 app.post("/test_upload", upload.single("picturePath"), async (req, res) => {
   try {
     throw "kkkkk";
