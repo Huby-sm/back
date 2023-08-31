@@ -56,7 +56,6 @@ const upload = multer({ storage });*/
 /* FILE STORAGE */
 
 /* ROUTES WITH FILES */
-console.log("upload :>> ", upload);
 app.post("/auth/register", upload.single("picturePath"), register);
 app.post("/posts", verifyToken, upload.single("picturePath"), createPost);
 app.put(
@@ -65,24 +64,6 @@ app.put(
   upload.single("picturePath"),
   updateProfilePicture
 );
-app.post("/test_upload", upload.single("picturePath"), async (req, res) => {
-  try {
-    throw "kkkkk";
-    // const { postId } = req.params;
-    // const { id } = req.user;
-    // const user = await User.findOne({ _id: id });
-    // const post = await Post.findOne({ _id: postId });
-    // if (user.role === "admin" || post.userId.toString() === id) {
-    //   await Post.deleteOne({ _id: postId });
-    // }
-    // res.status(403).json({ msg: "User is not authorized" });
-    console.log("req.files :>> ", req.file.location);
-    return res.status(200).json({ status: "ok", file: req.file.location });
-  } catch (err) {
-    // console.error(err);
-    res.status(404).json({ message: err.message });
-  }
-});
 //app.post("/auth/register", uploadToS3, register);
 //app.post("/posts", verifyToken, uploadToS3,s3Uploader,createPost);
 
