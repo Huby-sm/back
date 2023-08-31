@@ -40,7 +40,7 @@ app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 app.use(cors());
 app.use("/assets", express.static(path.join(__dirname, "public/assets")));
 
-console.log("BUCKET_NAME_ici:", process.env.BUCKET_NAME);
+console.log("BUCKET_NAME_ici:", process.env);
 
 /* FILE STORAGE */
 /*const storage = multer.diskStorage({
@@ -55,8 +55,36 @@ const upload = multer({ storage });*/
 /* FILE STORAGE */
 
 /* ROUTES WITH FILES */
-app.post("/auth/register", upload.single("picturePath"), register);
+console.log("upload :>> ", upload);
+app.post(
+  "/auth/register",
+  (req, res, next) => {
+    console.log("req :>> ", req.body);
+
+    next();
+  },
+  upload.single("picturePath"),
+  register
+);
 app.post("/posts", verifyToken, upload.single("picturePath"), createPost);
+app.post("/test_upload", upload.single("picturePath"), async (req, res) => {
+  try {
+    throw "kkkkk";
+    // const { postId } = req.params;
+    // const { id } = req.user;
+    // const user = await User.findOne({ _id: id });
+    // const post = await Post.findOne({ _id: postId });
+    // if (user.role === "admin" || post.userId.toString() === id) {
+    //   await Post.deleteOne({ _id: postId });
+    // }
+    // res.status(403).json({ msg: "User is not authorized" });
+    console.log("req.files :>> ", req.file.location);
+    return res.status(200).json({ status: "ok", file: req.file.location });
+  } catch (err) {
+    // console.error(err);
+    res.status(404).json({ message: err.message });
+  }
+});
 //app.post("/auth/register", uploadToS3, register);
 //app.post("/posts", verifyToken, uploadToS3,s3Uploader,createPost);
 
