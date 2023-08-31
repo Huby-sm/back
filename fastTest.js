@@ -7,6 +7,9 @@ import { io } from "./socketio/setup.js";
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 const test = async () => {
+  // const toto = await User.findById("64b667da48396b12212f1654");
+  // const toto = await User.find({ _id: "64b667da48396b12212f1654" });
+  // console.log("toto :>> ", toto);
   //
   // const conv = new Conversation({
   //   user1: "64b667da48396b12212f1654",

@@ -1,6 +1,6 @@
 import express from "express";
 import bodyParser from "body-parser";
-import mongoose, { mongo } from "mongoose";
+import mongoose from "mongoose";
 import cors from "cors";
 import dotenv from "dotenv";
 dotenv.config({ path: ".env" });
@@ -20,6 +20,7 @@ import eventRoutes from "./routes/events.js";
 import reportingRoutes from "./routes/reportings.js";
 import { register } from "./controllers/auth.js";
 import { createPost } from "./controllers/posts.js";
+import { updateProfilePicture } from "./controllers/users.js";
 import { verifyToken } from "./middleware/auth.js";
 import setupSocketIO from "./socketio/setup.js";
 import { cleanSocketIds } from "./socketio/setup.js";
@@ -40,7 +41,7 @@ app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 app.use(cors());
 app.use("/assets", express.static(path.join(__dirname, "public/assets")));
 
-console.log("BUCKET_NAME_ici:", process.env.BUCKET_NAME);
+console.log("BUCKET_NAME_ici:", process.env);
 
 /* FILE STORAGE */
 /*const storage = multer.diskStorage({
@@ -58,6 +59,12 @@ const upload = multer({ storage });*/
 //app.post("/auth/register", upload.single("picturePath"), register);
 app.post("/auth/register", upload.single("picture"), register);
 app.post("/posts", verifyToken, upload.single("picturePath"), createPost);
+app.put(
+  "/users/photo",
+  verifyToken,
+  upload.single("picturePath"),
+  updateProfilePicture
+);
 //app.post("/auth/register", uploadToS3, register);
 //app.post("/posts", verifyToken, uploadToS3,s3Uploader,createPost);
 
