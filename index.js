@@ -55,7 +55,8 @@ const upload = multer({ storage });*/
 /* FILE STORAGE */
 
 /* ROUTES WITH FILES */
-app.post("/auth/register", upload.single("picturePath"), register);
+//app.post("/auth/register", upload.single("picturePath"), register);
+app.post("/auth/register", upload.single("picture"), register);
 app.post("/posts", verifyToken, upload.single("picturePath"), createPost);
 //app.post("/auth/register", uploadToS3, register);
 //app.post("/posts", verifyToken, uploadToS3,s3Uploader,createPost);
