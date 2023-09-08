@@ -9,6 +9,7 @@ import nodemailer from "nodemailer";
 /* REGISTER USER */
 export const register = async (req, res) => {
   try {
+    console.log("erreur 1")
     const {
       firstName,
       lastName,
@@ -20,16 +21,16 @@ export const register = async (req, res) => {
       promo,
       filiere,
     } = req.body;
-
+    console.log("erreur 2")
     const salt = await bcrypt.genSalt();
     const passwordHash = await bcrypt.hash(password, salt);
-
+    console.log("erreur 3", req.file)
     const newUser = new User({
       firstName,
       lastName,
       email,
       password: passwordHash,
-      picturePath: req.file.location,
+      picturePath: req.file ? req.file.location : null,
       friends,
       location,
       occupation,
@@ -37,9 +38,9 @@ export const register = async (req, res) => {
       filiere,
     });
     const savedUser = await newUser.save();
-
     res.status(201).json(savedUser);
   } catch (err) {
+    console.log("erreur 4")
     res.status(500).json({ error: err.message });
   }
 };
