@@ -19,7 +19,8 @@ const EventSchema = new mongoose.Schema(
             type: Date,
             required: true,
         },
-        picturePath: String
+        picturePath: String,
+        location: String,
     }
 );
 

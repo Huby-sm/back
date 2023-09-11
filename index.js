@@ -26,6 +26,8 @@ import setupSocketIO from "./socketio/setup.js";
 import { cleanSocketIds } from "./socketio/setup.js";
 import fastTest from "./fastTest.js";
 import upload from "./helpers/upload.helper.js";
+import {createEvent} from "./controllers/events.js";
+import {isBde} from "./middleware/bde.js";
 
 /* CONFIGURATIONS */
 const __filename = fileURLToPath(import.meta.url);
@@ -57,6 +59,7 @@ const upload = multer({ storage });*/
 
 /* ROUTES WITH FILES */
 //app.post("/auth/register", upload.single("picturePath"), register);
+app.post("/events", verifyToken, isBde, upload.single("picturePath"),createEvent ) //isBde,
 app.post("/auth/register", upload.single("picturePath"), register);
 app.post("/posts", verifyToken, upload.single("picturePath"), createPost);
 app.put(

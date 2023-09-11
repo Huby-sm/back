@@ -4,21 +4,25 @@ import User from "../models/User.js";
 /*CREATE EVENT*/
 export const createEvent = async (req, res) => {
     try {
-        const { userId, title, description, date, picturePath } = req.body;
+    const { userId, title, description, date, /*picturePath*/ } = req.body;
 
-        const newEvent = new Event({
-            userId: userId,
-            title: title,
-            description: description,
-            date: date,
-            picturePath: picturePath
-        });
-        await newEvent.save();
+    const picturePath = req.file ? req.file.location : null;
 
-        res.status(201).json(newEvent);
-    } catch (err) {
-        res.status(409).json({ message: err.message });
-    }
+    console.log("Picture Path:", picturePath);
+    console.log("req.file", req.file);
+    const newEvent = new Event({
+        userId: userId,
+        title: title,
+        description: description,
+        date: date,
+        picturePath: picturePath
+    });
+    await newEvent.save();
+
+    res.status(201).json(newEvent);
+} catch (err) {
+    res.status(409).json({ message: err.message });
+}
 }
 
 /*READ EVENTS*/
