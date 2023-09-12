@@ -16,7 +16,7 @@ const router = express.Router();
 /* READ */
 router.get("/:id", verifyToken, getUser);
 router.get("/:id/friends", verifyToken, getUserFriends);
-router.get("/", [verifyToken, isAdmin], getUsers);
+router.get("/", verifyToken, getUsers);//isAdmin
 router.get("/:id/blocked", verifyToken, checkBlocked);
 
 /* UPDATE */
