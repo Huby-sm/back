@@ -92,3 +92,22 @@ export const declineFriendRequest = async (req, res) => {
     res.status(404).json({ message: err.message });
   }
 };
+
+export const cancelFriendship = async (req, res) => {
+  try {
+    const { id } = req.user;
+    const { friendId } = req.params;
+
+    const friend = await Friend.findOne({ _id: friendId });
+
+    if (
+      friend &&
+      (friend.user1Id.toString() === id || friend.user2Id.toString() === id)
+    ) {
+      await Friend.deleteOne({ _id: friend._id });
+      return res.status(200).json({ status: "ok" });
+    }
+  } catch (err) {
+    res.status(404).json({ message: err.message });
+  }
+};
