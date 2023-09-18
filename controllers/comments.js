@@ -1,4 +1,5 @@
 import Comment from "../models/Comment.js";
+import User from "../models/User.js";
 import { removeAllInstances } from "../utils/index.js";
 
 /* CREATE COMMENT*/
@@ -42,9 +43,16 @@ export const getCommentInPost = async (req, res) => {
 
 export const deleteComment = async (req, res) => {
   try {
+    const { id } = req.user;
     const { commentId } = req.params;
-    await Comment.deleteOne({ _id: commentId });
-    return res.status(200).json({ status: "ok" });
+
+    const user = await User.findById(id);
+    const comment = await Comment.findById(commentId);
+
+    if (user.role === "admin" || comment.userId.toString() === id) {
+      await Comment.deleteOne({ _id: commentId });
+      return res.status(200).json({ status: "ok" });
+    }
   } catch (err) {
     console.error(err);
     res.status(404).json({ message: err.message });

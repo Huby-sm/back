@@ -16,7 +16,7 @@ router.post("/", verifyToken, createComment);
 
 /* READ */
 router.get("/:postId", verifyToken, getCommentInPost);
-router.delete("/:commentId", [verifyToken, isAdmin], deleteComment);
+router.delete("/:commentId", [verifyToken], deleteComment);
 
 /* UPDATE */
 router.patch("/:id/like", verifyToken, likeComment);
