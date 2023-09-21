@@ -82,3 +82,20 @@ Une fois le back-end en cours d'exécution, il interagira avec la partie front-e
 
 
 ## Mise en production
+
+Hub'y est actuellement héberger sur fly.io pour sa partie production.
+Pour ce connecter au panel de fly.io
+
+ ``` fly auth login ```
+
+Cette commande permet de lancer la fenetre de connection sur votre navigateur. Pour lancer l'outil de génération de container de fly (on rajoute --pour préciser notre image, ici nous voulons utiliser notre Dockerfile)
+
+ ``` fly launch --dockerfile Dockerfile ```
+
+Pour mettre en ligne notre application précédemment créée ou la mettre à jour lorsque des changements ont été effectués.
+
+ ``` fly deploy ```
+
+Si vous voulez ouvrir directement l'application sur votre navigateur sans avoir à rentrer son url
+
+ ``` fly apps open ```
