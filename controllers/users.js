@@ -1,7 +1,7 @@
 import User from "../models/User.js";
 import Friend from "../models/Friend.js";
 import Notification from "../models/Notification.js";
-import { emitNotification } from "../socketio/setup.js";
+import { blockUserSocket } from "../socketio/setup.js";
 
 /* READ */
 export const getUser = async (req, res) => {
@@ -136,6 +136,7 @@ export const toggleBlockUser = async (req, res) => {
     await notification.save();
 
     await emitNotification(userId, notification._id);*/
+    await blockUserSocket(userId, user.blocked);
 
     res.status(200).json(user);
   } catch (err) {
