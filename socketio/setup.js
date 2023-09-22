@@ -35,13 +35,15 @@ export const emitNotification = async (userId, notificationId) => {
 };
 
 const setupSocketIO = async (app, PORT) => {
+  const frontendUrl = process.env.APP_FRONTEND_URL || "http://localhost:3000";
+
   const httpServer = createServer(app);
   // app.listen(PORT, () => console.log(`Server Port: ${PORT}`));
   io = new Server(httpServer, {
     /* options */
     cors: {
       // origin: "*",
-      origin: ["https://admin.socket.io", "http://localhost:3000"],
+      origin: ["https://admin.socket.io", frontendUrl],
       credentials: true,
       methods: ["GET", "POST", "OPTIONS"],
     },
