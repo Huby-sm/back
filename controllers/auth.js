@@ -6,6 +6,7 @@ import sendEmail from "../utils/mailer.js";
 import { generateToken } from "../utils/index.js";
 import nodemailer from "nodemailer";
 
+const frontendUrl = process.env.APP_FRONTEND_URL || "http://localhost:3000";
 /* REGISTER USER */
 export const register = async (req, res) => {
   try {
@@ -77,7 +78,7 @@ export const sendResetPasswordEmail = async (req, res) => {
 
   const savedToken = await token.save();
 
-  const resetPasswordLink = `http://localhost:3000/resetPassword/${savedToken.token}`;
+  const resetPasswordLink = `${frontendUrl}/resetPassword/${savedToken.token}`;
 
   let message = {
     from: "Sender Name <sender@example.com>",
