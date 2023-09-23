@@ -113,6 +113,7 @@ export const likePost = async (req, res) => {
     const { id } = req.params;
     const { userId } = req.body;
     const post = await Post.findById(id);
+    // const post = await fetchFeed(id)
     const likes = [...post.likes].map((e) => e.toString());
     const isLiked = likes.includes(userId);
 
