@@ -69,13 +69,23 @@ export const getUserFriends = async (req, res) => {
     const { id } = req.params;
     const user = await User.findById(id);
 
+    console.log("User:", user);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    if (!user.friends) {
+      return res.status(200).json([]);
+    }
+
     const friends = await Promise.all(
-      user.friends.map((id) => User.findById(id))
+        user.friends.map((id) => User.findById(id))
     );
     const formattedFriends = friends.map(
-      ({ _id, firstName, lastName, occupation, location, picturePath }) => {
-        return { _id, firstName, lastName, occupation, location, picturePath };
-      }
+        ({ _id, firstName, lastName, occupation, location, picturePath }) => {
+          return { _id, firstName, lastName, occupation, location, picturePath };
+        }
     );
     res.status(200).json(formattedFriends);
   } catch (err) {
