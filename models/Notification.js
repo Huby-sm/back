@@ -3,16 +3,16 @@ import { Schema } from "mongoose";
 
 const NotificationSchema = new mongoose.Schema(
   {
-    type: {
+    type: { //blocage/ajout ami
       type: String,
       required: true,
     },
-    userId: {
+    userId: { //recois la notifaction
       type: Schema.Types.ObjectId,
       ref: "User",
       required: true,
     },
-    data: {
+    data: { //données associé a la notification (blocage savoir si bloqué ou debloqué)
       type: Object,
     },
     seen: {
@@ -20,7 +20,7 @@ const NotificationSchema = new mongoose.Schema(
       required: true,
       default: false,
     },
-    friendId: {
+    friendId: { //dans le cas d'une amitié
       type: Schema.Types.ObjectId,
       ref: "Friend",
     },

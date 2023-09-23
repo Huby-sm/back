@@ -59,7 +59,7 @@ const upload = multer({ storage });*/
 
 /* ROUTES WITH FILES */
 //app.post("/auth/register", upload.single("picturePath"), register);
-app.post("/events/form", verifyToken, isBde, isAdmin, upload.single("picturePath"),createEvent ) //isBde,
+app.post("/events/form", verifyToken, isBde, upload.single("picturePath"),createEvent ) //isBde,
 app.post("/auth/register", upload.single("picturePath"), register);
 app.post("/posts", verifyToken, upload.single("picturePath"), createPost);
 app.put(
@@ -95,9 +95,9 @@ mongoose
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
-  .then(async () => {
-    await cleanSocketIds();
-    setupSocketIO(app, PORT);
+  .then(async () => {//une fois la connexion établi
+    await cleanSocketIds();//1.clean les socket
+    setupSocketIO(app, PORT);//2.
 
     fastTest();
     /* ADD DATA ONE TIME */

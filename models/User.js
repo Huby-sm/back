@@ -37,21 +37,13 @@ const UserSchema = new mongoose.Schema(
       type: String,
       default: "user", // user - admin - bde
     },
-    friends: {
-      type: Array,
-      default: [],
-    },
-    socketIds: [
-      {
+    socketIds: [ //j'enregistre au moment ou je créer la connexion
+      { //je mets mes sockets dans ma bdd user
         type: String,
       },
     ],
     promo: String,
     filiere: String,
-    location: String,
-    occupation: String,
-    viewedProfile: Number,
-    impressions: Number,
   },
   { timestamps: true }
 );

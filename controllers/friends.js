@@ -23,7 +23,7 @@ export const createFriendRequest = async (req, res) => {
     await notification.save();
     console.log("notification  PAR ICI:>> ", notification);
 
-    await emitNotification(userId, notification._id);
+    await emitNotification(userId, notification._id);//emettre la notification
 
     res.status(200).json(friend);
   } catch (err) {

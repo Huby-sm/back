@@ -13,7 +13,7 @@ const FriendSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
-    status: {
+    status: { //request/accepted/decline
       type: String,
       required: true,
       default: "request",

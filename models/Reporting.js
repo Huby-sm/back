@@ -6,14 +6,14 @@ const ReportingSchema = new mongoose.Schema(
     post: {
       type: Schema.Types.ObjectId,
       ref: "Post",
-      required: function () {
+      required: function () {//tej une personne qui ne met pas de comm ou post
         return !this.comment;
       },
     },
     comment: {
-      type: Schema.Types.ObjectId,
+      type: Schema.Types.ObjectId,//soi post soi comment
       ref: "Comment",
-      required: function () {
+      required: function () {//si pas de post pas de require, si pas de com pas de require
         return !this.post;
       },
     },

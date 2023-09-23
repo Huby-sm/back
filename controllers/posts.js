@@ -9,6 +9,7 @@ import upload from "../helpers/upload.helper.js";
 
 export const createPost = async (req, res) => {
   try {
+    const { id } = req.user;
     const { userId, description /*picturePath*/ } = req.body;
     //const picturePath = req.file.location;
     const user = await User.findById(userId);
@@ -33,9 +34,7 @@ export const createPost = async (req, res) => {
     });
     await newPost.save();
 
-    const post = await Post.find();
-    //** Tri des données dans l'ordre décroissant selon la date de création du post
-    post.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    const post = await fetchFeed(id)
     res.status(201).json(post);
   } catch (err) {
     console.error(err);
@@ -48,103 +47,7 @@ export const getFeedPosts = async (req, res) => {
   try {
     const { id } = req.user;
 
-    const post = await Post.aggregate([
-      {
-        $lookup: {
-          from: "users", // The name of the Comment collection in the database
-          localField: "userId",
-          foreignField: "_id",
-          as: "user",
-        },
-      },
-      {
-        $addFields: {
-          user: { $arrayElemAt: ["$user", -1] }, // Get the last comment from the 'comments' array
-        },
-      },
-      {
-        $lookup: {
-          from: "comments", // The name of the Comment collection in the database
-          localField: "_id",
-          foreignField: "postId",
-          as: "comments",
-        },
-      },
-      {
-        $addFields: {
-          lastComment: { $arrayElemAt: ["$comments", -1] }, // Get the last comment from the 'comments' array
-        },
-      },
-      {
-        $project: {
-          comments: 0, // Exclude the 'comments' field from the result
-        },
-      },
-      {
-        $sort: { createdAt: -1 },
-      },
-      {
-        $lookup: {
-          from: "users", // The name of the User collection in the database
-          localField: "lastComment.userId",
-          foreignField: "_id",
-          as: "lastComment.userId",
-        },
-      },
-      {
-        $unwind: {
-          path: "$lastComment.userId",
-          preserveNullAndEmptyArrays: true, // Preserve comments without associated users
-        },
-      },
-      {
-        $lookup: {
-          from: "friends", // Use the name of your friends collection
-          let: { authorId: "$userId" },
-          pipeline: [
-            {
-              $match: {
-                $expr: {
-                  $and: [
-                    {
-                      $eq: ["$status", "friend"],
-                    },
-                    {
-                      $or: [
-                        {
-                          $and: [
-                            { $eq: ["$user1Id", "$$authorId"] },
-                            { $eq: ["$user2Id", mongoose.Types.ObjectId(id)] },
-                          ],
-                        },
-                        {
-                          $and: [
-                            { $eq: ["$user2Id", "$$authorId"] },
-                            { $eq: ["$user1Id", mongoose.Types.ObjectId(id)] },
-                          ],
-                        },
-                      ],
-                    },
-                  ],
-                },
-              },
-            },
-          ],
-          as: "friends",
-        },
-      },
-      {
-        $addFields: {
-          isFriend: {
-            $cond: {
-              if: { $gt: [{ $size: "$friends" }, 0] },
-              then: true,
-              else: false,
-            },
-          },
-        },
-      },
-    ]);
+    const post = await fetchFeed(id)
 
     res.status(200).json(post);
   } catch (err) {
@@ -232,25 +135,105 @@ export const likePost = async (req, res) => {
   }
 };
 
-/* COMMENTAIRE  ????*/
-export const getCommentByUserInPost = async (req, res) => {
-  try {
-    const { id } = req.params; // l'ID du post
-    //const { userId } = req.body; // l'ID de l'utilisateur
+const fetchFeed = async (id) => await Post.aggregate([
+  {
+    $lookup: {
+      from: "users", // The name of the Comment collection in the database
+      localField: "userId",
+      foreignField: "_id",
+      as: "user",
+    },
+  },
+  {
+    $addFields: {
+      user: { $arrayElemAt: ["$user", -1] }, // Get the last comment from the 'comments' array
+    },
+  },
+  {
+    $lookup: {
+      from: "comments", // The name of the Comment collection in the database
+      localField: "_id",
+      foreignField: "postId",
+      as: "comments",
+    },
+  },
+  {
+    $addFields: {
+      lastComment: { $arrayElemAt: ["$comments", -1] }, // Get the last comment from the 'comments' array
+    },
+  },
+  {
+    $project: {
+      comments: 0, // Exclude the 'comments' field from the result
+    },
+  },
+  {
+    $sort: { createdAt: -1 },
+  },
+  {
+    $lookup: {
+      from: "users", // The name of the User collection in the database
+      localField: "lastComment.userId",
+      foreignField: "_id",
+      as: "lastComment.userId",
+    },
+  },
+  {
+    $unwind: {
+      path: "$lastComment.userId",
+      preserveNullAndEmptyArrays: true, // Preserve comments without associated users
+    },
+  },
+  {
+    $lookup: {
+      from: "friends", // Use the name of your friends collection
+      let: { authorId: "$userId" },
+      pipeline: [
+        {
+          $match: {
+            $expr: {
+              $and: [
+                {
+                  $eq: ["$status", "friend"],
+                },
+                {
+                  $or: [
+                    {
+                      $and: [
+                        { $eq: ["$user1Id", "$$authorId"] },
+                        { $eq: ["$user2Id", mongoose.Types.ObjectId(id)] },
+                      ],
+                    },
+                    {
+                      $and: [
+                        { $eq: ["$user2Id", "$$authorId"] },
+                        { $eq: ["$user1Id", mongoose.Types.ObjectId(id)] },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            },
+          },
+        },
+      ],
+      as: "friends",
+    },
+  },
+  {
+    $addFields: {
+      isFriend: {
+        $cond: {
+          if: { $gt: [{ $size: "$friends" }, 0] },
+          then: true,
+          else: false,
+        },
+      },
+    },
+  },
+]);
 
-    const post = await Post.findById(id); // Trv le post avec l'ID donné
-    const comment = post.comments.find();
-    //const comment = post.comments.find();
-    //.find(c => c.userId === userId); // Trv le commentaire de l'utilisateur sous le post
 
-    if (!comment) {
-      // Si le commentaire n'est pas trouvé, renvoyer un message d'erreur
-      return res.status(204).json({ message: "Comment not found" });
-    }
 
-    res.status(200).json(comment); // Renvoyer le commentaire
-  } catch (err) {
-    console.error(err);
-    res.status(404).json({ message: err.message });
-  }
-};
+
+
