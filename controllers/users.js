@@ -13,12 +13,20 @@ export const getUser = async (req, res) => {
     let friend = null;
 
     if (currentUserId !== id) {
-      friend = await Friend.findOne({
+      const allFriends = await Friend.find({
         $or: [
           { user1Id: id, user2Id: currentUserId },
           { user1Id: currentUserId, user2Id: id },
         ],
       });
+
+      if (allFriends.length === 1) {
+        friend = allFriends[0];
+      } else if (allFriends.every((e) => e.status === "decline")) {
+        friend = allFriends[0];
+      } else {
+        friend = allFriends.filter((e) => e.status !== "decline")[0];
+      }
     }
 
     // let friendCondition =
